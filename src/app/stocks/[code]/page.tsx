@@ -5,18 +5,18 @@ import { HistoricalChart } from "@/components/HistoricalChart";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   const stocks = await getStocks();
   return stocks.map((stock) => ({
     code: stock.code,
   }));
-}
+};
 
-export default async function StockDetailPage({
+const StockDetailPage = async ({
   params,
 }: {
   params: Promise<{ code: string }>;
-}) {
+}) => {
   const { code } = await params;
   const stock = await getStock(code);
   const history = await getFinancialHistory(code);
@@ -150,4 +150,6 @@ export default async function StockDetailPage({
       </div>
     </div>
   );
-}
+};
+
+export default StockDetailPage;

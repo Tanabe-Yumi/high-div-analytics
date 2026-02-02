@@ -4,7 +4,7 @@ import { ScoreChart } from "@/components/ScoreChart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function StockCard({ stock }: { stock: Stock }) {
+export const StockCard = ({ stock }: { stock: Stock }) => {
   const { score } = stock;
   if (!score) return null;
 
@@ -59,4 +59,4 @@ export function StockCard({ stock }: { stock: Stock }) {
       </CardContent>
     </Card>
   );
-}
+};

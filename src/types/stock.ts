@@ -1,3 +1,5 @@
+// TODO: 重複した interface が多いので簡素化する
+
 export interface EvaluationMetrics {
   sales: number; // 売上 (百万円)
   operatingProfitMargin: number; // 営業利益率 (%)

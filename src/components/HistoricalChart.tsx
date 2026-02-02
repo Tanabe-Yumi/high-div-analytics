@@ -17,12 +17,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-type Props = {
+type HistoricalChartProps = {
   history: FinancialHistory[];
 };
 
-export function HistoricalChart({ history }: Props) {
+export const HistoricalChart = ({ history }: HistoricalChartProps) => {
   // Filter for FY only for cleaner chart, or use all? Usually FY trends are best.
+  // FIXME: 3月決算以外の会社もある
   const data = history.filter((h) => h.period === "FY");
 
   return (
@@ -94,4 +95,4 @@ export function HistoricalChart({ history }: Props) {
       </ResponsiveContainer>
     </div>
   );
-}
+};

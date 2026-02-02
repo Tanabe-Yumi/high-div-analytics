@@ -9,16 +9,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Score } from "@/types/stock";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Removed unused import
-// Wait, I haven't created "@/components/ui/card" yet. I should either create it or use inline styles or standard HTML for now to avoid dependency hell if I didn't install shadcn components.
-// I'll create a simple wrapper or just use standard div with tailwind classes.
-// I'll use standard Tailwind classes for now to be safe and fast.
 
-type Props = {
+type ScoreChartProps = {
   score: Score;
 };
 
-export function ScoreChart({ score }: Props) {
+export const ScoreChart = ({ score }: ScoreChartProps) => {
   const data = [
     { subject: "売上", value: score.sales, fullMark: 5 },
     { subject: "営利", value: score.operatingProfitMargin, fullMark: 5 },
@@ -59,4 +55,4 @@ export function ScoreChart({ score }: Props) {
       </ResponsiveContainer>
     </div>
   );
-}
+};

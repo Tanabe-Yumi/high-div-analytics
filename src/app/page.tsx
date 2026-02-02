@@ -4,7 +4,7 @@ import { AlertCircleIcon } from "lucide-react";
 
 export const revalidate = 0; // Dynamic fetch for now
 
-export default async function Home() {
+const Home = async () => {
   const stocks = await getStocks();
   // Sort stocks by total score descending
   const sortedStocks = [...stocks].sort(
@@ -46,4 +46,6 @@ export default async function Home() {
       )}
     </div>
   );
-}
+};
+
+export default Home;
