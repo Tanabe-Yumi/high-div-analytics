@@ -30,3 +30,18 @@ export interface Stock {
     metrics: EvaluationMetrics;
     score?: Score; // Calculated score
 }
+
+export interface FinancialHistory {
+    id: string;
+    code: string;
+    year: number;
+    period: string; // 'FY', '1Q', etc.
+    sales: number;
+    operating_profit: number;
+    eps: number;
+    dividends: number;
+    payout_ratio: number;
+    equity_ratio: number;
+    operating_cash_flow: number;
+    cash_equivalents: number;
+}

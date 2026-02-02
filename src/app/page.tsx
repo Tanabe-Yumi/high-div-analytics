@@ -1,7 +1,10 @@
-import { stocks } from "@/data/mockStocks";
+import { getStocks } from "@/lib/api";
 import { StockCard } from "@/components/StockCard";
 
-export default function Home() {
+export const revalidate = 0; // Dynamic fetch for now
+
+export default async function Home() {
+  const stocks = await getStocks();
   // Sort stocks by total score descending
   const sortedStocks = [...stocks].sort((a, b) => (b.score?.total || 0) - (a.score?.total || 0));
 

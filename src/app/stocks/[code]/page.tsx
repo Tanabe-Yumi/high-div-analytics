@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
-import { stocks } from "@/data/mockStocks";
+import { getStock, getFinancialHistory, getStocks } from "@/lib/api";
 import { ScoreChart } from "@/components/ScoreChart";
-import { Badge, ArrowLeft } from "lucide-react"; // Generic icon
+import { HistoricalChart } from "@/components/HistoricalChart";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+    const stocks = await getStocks();
     return stocks.map((stock) => ({
         code: stock.code,
     }));
@@ -12,7 +14,8 @@ export function generateStaticParams() {
 
 export default async function StockDetailPage({ params }: { params: Promise<{ code: string }> }) {
     const { code } = await params;
-    const stock = stocks.find((s) => s.code === code);
+    const stock = await getStock(code);
+    const history = await getFinancialHistory(code);
 
     if (!stock) {
         notFound();
@@ -21,12 +24,12 @@ export default async function StockDetailPage({ params }: { params: Promise<{ co
     const { metrics, score } = stock;
 
     const metricItems = [
-        { label: "売上", value: `${metrics.sales.toLocaleString()}百万円`, score: score?.sales },
+        { label: "売上", value: `${(metrics.sales / 100).toLocaleString()}億円`, score: score?.sales },
         { label: "営業利益率", value: `${metrics.operatingProfitMargin}%`, score: score?.operatingProfitMargin },
         { label: "EPS", value: `${metrics.eps}円`, score: score?.eps },
         { label: "自己資本比率", value: `${metrics.equityRatio}%`, score: score?.equityRatio },
-        { label: "営業CF", value: `${metrics.operatingCashFlow.toLocaleString()}百万円`, score: score?.operatingCashFlow },
-        { label: "現金等", value: `${metrics.cash.toLocaleString()}百万円`, score: score?.cash },
+        { label: "営業CF", value: `${(metrics.operatingCashFlow / 100).toLocaleString()}億円`, score: score?.operatingCashFlow },
+        { label: "現金等", value: `${(metrics.cash / 100).toLocaleString()}億円`, score: score?.cash },
         { label: "一株配当", value: `${metrics.dividendPerShare}円`, score: score?.dividendPerShare },
         { label: "配当性向", value: `${metrics.payoutRatio}%`, score: score?.payoutRatio },
     ];
@@ -62,19 +65,19 @@ export default async function StockDetailPage({ params }: { params: Promise<{ co
                 </div>
 
                 {/* Right Col: Details */}
-                <div className="md:col-span-2">
-                    <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="md:col-span-2 space-y-8">
+                    <div className="grid grid-cols-2 gap-4">
                         <div className="p-4 bg-muted/50 rounded-lg">
-                            <p className="text-sm text-muted-foreground">現在値</p>
+                            <p className="text-sm text-muted-foreground">現在値 (推定)</p>
                             <p className="text-2xl font-bold">¥{stock.currentPrice.toLocaleString()}</p>
                         </div>
                         <div className="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-lg border border-emerald-100 dark:border-emerald-900">
-                            <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">配当利回り</p>
+                            <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">配当利回り (推定)</p>
                             <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{stock.dividendYield.toFixed(2)}%</p>
                         </div>
                     </div>
 
-                    <h2 className="text-xl font-bold mb-4">指標詳細</h2>
+                    <h2 className="text-xl font-bold">指標詳細 (最新期)</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {metricItems.map((item) => (
                             <div key={item.label} className="flex flex-col p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
@@ -87,6 +90,11 @@ export default async function StockDetailPage({ params }: { params: Promise<{ co
                                 <p className="text-lg font-semibold mt-auto">{item.value}</p>
                             </div>
                         ))}
+                    </div>
+
+                    {/* Historical Chart */}
+                    <div className="pt-8 border-t">
+                        <HistoricalChart history={history} />
                     </div>
                 </div>
             </div>
