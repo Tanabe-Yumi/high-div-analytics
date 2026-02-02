@@ -30,13 +30,11 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           geistSans.variable,
-          geistMono.variable
+          geistMono.variable,
         )}
       >
         <Header />
-        <main className="container mx-auto py-6 px-4 md:px-8">
-          {children}
-        </main>
+        <main className="container mx-auto py-6 px-4 md:px-8">{children}</main>
       </body>
     </html>
   );
