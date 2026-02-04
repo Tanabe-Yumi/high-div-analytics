@@ -98,7 +98,7 @@ export async function getStocks(): Promise<Stock[]> {
   return stocks;
 }
 
-export async function getStock(code: string): Promise<Stock | null> {
+export async function getStockByCode(code: string): Promise<Stock | null> {
   const all = await getStocks();
   return all.find((s) => s.code === code) || null;
 }

@@ -26,6 +26,8 @@ export const ScoreChart = ({ score }: ScoreChartProps) => {
     { subject: "配当性向", value: score.payoutRatio, fullMark: 5 },
   ];
 
+  // TODO: チャートエリアの高さを柔軟にする。高さのみ合わせたら幅が合わない
+
   return (
     <div className="w-full h-60 flex justify-center items-center">
       <ResponsiveContainer width="100%" height="100%">
