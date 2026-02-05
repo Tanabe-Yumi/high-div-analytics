@@ -31,6 +31,7 @@ export interface Stock {
   industry: string; // 業種
   metrics: EvaluationMetrics;
   score?: Score; // Calculated score
+  updatedAt?: string; // 株価更新日時
 }
 
 export interface FinancialHistory {

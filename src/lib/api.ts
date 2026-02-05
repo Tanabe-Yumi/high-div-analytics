@@ -70,18 +70,10 @@ export async function getStocks(): Promise<Stock[]> {
 
     if (history) {
       metrics = mapToMetrics(history);
-      // Mocking current price logic based on dividend yield for demo
-      // In real app, we need a 'prices' table or API for current price.
-      // For now, let's reverse calculate price from yield if we had it, or just use mock fixed values or fetch from real API if possible.
-      // Since we dropped mockStocks.ts, we need a price source.
-      // Let's assume Price ~ Dividend / 0.04 (4% yield assumption for fallback)
-      // OR, retrieve 'currentPrice' if we added it to stocks table (we didn't).
-      // Let's use a mock mapping or random for demo purposes if not in DB.
-
-      // Actually, looking at sample CSV, it doesn't have price.
-      // I will implement a simpler fallback:
-      currentPrice = history.dividends * 25; // approx 4% yield
-      dividendYield = (history.dividends / currentPrice) * 100;
+      
+      // DBの値（current_price, dividend_yield）があれば優先し、なければ計算
+      currentPrice = s.current_price || (history.dividends * 25);
+      dividendYield = s.dividend_yield || (currentPrice > 0 ? (history.dividends / currentPrice) * 100 : 0);
     }
 
     return {
@@ -89,9 +81,10 @@ export async function getStocks(): Promise<Stock[]> {
       name: s.name,
       industry: s.industry,
       currentPrice,
-      dividendYield,
+      dividendYield: parseFloat(dividendYield.toFixed(2)),
       metrics,
       score: calculateScore(metrics),
+      updatedAt: s.updated_at,
     };
   });
 
