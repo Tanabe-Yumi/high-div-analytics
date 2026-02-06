@@ -2,15 +2,12 @@ import { getStocks } from "@/lib/api";
 import { StockCard } from "@/components/StockCard";
 import { AlertCircleIcon } from "lucide-react";
 
-export const revalidate = 0; // Dynamic fetch for now
-
 const Home = async () => {
   const stocks = await getStocks();
-  // Sort stocks by total score descending
+  // total score の降順にソート
   const sortedStocks = [...stocks].sort(
     (a, b) => (b.score?.total || 0) - (a.score?.total || 0),
   );
-  // const sortedStocks = [];
 
   return (
     <div className="space-y-8">

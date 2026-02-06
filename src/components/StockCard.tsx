@@ -39,7 +39,7 @@ export const StockCard = ({ stock }: { stock: Stock }) => {
           <div>
             <p className="text-sm text-muted-foreground">現在値</p>
             <p className="text-lg font-semibold">
-              ¥{stock.currentPrice.toLocaleString()}
+              ¥{stock.price.toLocaleString()}
             </p>
           </div>
           <div className="text-right">

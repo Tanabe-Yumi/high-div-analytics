@@ -33,13 +33,13 @@ const StockDetailPage = async ({
   const metricItems = [
     {
       label: "売上",
-      value: `${(metrics.sales / 100).toLocaleString()}億円`,
+      value: `${metrics.sales.toLocaleString()}百万円`,
       score: score?.sales,
     },
     {
-      label: "営業利益率",
-      value: `${metrics.operatingProfitMargin}%`,
-      score: score?.operatingProfitMargin,
+      label: "営業利益",
+      value: `${metrics.operatingProfit.toLocaleString()}百万円`,
+      score: score?.operatingProfit,
     },
     { label: "EPS", value: `${metrics.eps}円`, score: score?.eps },
     {
@@ -49,18 +49,18 @@ const StockDetailPage = async ({
     },
     {
       label: "営業CF",
-      value: `${(metrics.operatingCashFlow / 100).toLocaleString()}億円`,
-      score: score?.operatingCashFlow,
+      value: `${metrics.operatingCF.toLocaleString()}百万円`,
+      score: score?.operatingCF,
     },
     {
       label: "現金等",
-      value: `${(metrics.cash / 100).toLocaleString()}億円`,
+      value: `${metrics.cash.toLocaleString()}百万円`,
       score: score?.cash,
     },
     {
       label: "一株配当",
-      value: `${metrics.dividendPerShare}円`,
-      score: score?.dividendPerShare,
+      value: `${metrics.dividend.toLocaleString()}円`,
+      score: score?.dividend,
     },
     {
       label: "配当性向",
@@ -113,16 +113,16 @@ const StockDetailPage = async ({
           <div className="grid grid-cols-2 gap-4">
             <Card className="py-4 bg-muted/50 border-muted">
               <CardContent className="px-4 py-2">
-                <p className="text-sm text-muted-foreground">現在値 (推定)</p>
+                <p className="text-sm text-muted-foreground">現在値</p>
                 <p className="text-2xl font-bold">
-                  ¥{stock.currentPrice.toLocaleString()}
+                  ¥{stock.price.toLocaleString()}
                 </p>
               </CardContent>
             </Card>
             <Card className="py-4 bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900">
               <CardContent className="px-4 py-2">
                 <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
-                  配当利回り (推定)
+                  配当利回り
                 </p>
                 <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
                   {stock.dividendYield.toFixed(2)}%
