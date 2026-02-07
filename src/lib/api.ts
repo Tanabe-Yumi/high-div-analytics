@@ -2,29 +2,24 @@ import { supabase } from "@/lib/supabase";
 import { Stock, FinancialHistory, EvaluationMetrics } from "@/types/stock";
 import { calculateScore } from "@/lib/scoring";
 
-// Helper to calculate derived metrics not in DB directly
 function mapToMetrics(history: FinancialHistory): EvaluationMetrics {
-  // Operating Profit Margin = (Operating Profit / Sales) * 100
-  const operatingProfitMargin = history.sales
-    ? (history.operating_profit / history.sales) * 100
-    : 0;
-
-  return {
-    sales: history.sales, // Already in 'millions' if CSV is correct, or raw. Let's assume raw in DB, code needs to handle unit based on display.
-    // Actually import script maps directly.
-    operatingProfitMargin: parseFloat(operatingProfitMargin.toFixed(1)),
-    eps: history.eps,
-    equityRatio: history.equity_ratio,
-    operatingCashFlow: history.operating_cash_flow,
-    cash: history.cash_equivalents,
-    dividendPerShare: history.dividends,
-    payoutRatio: history.payout_ratio,
-  };
+	return {
+		sales: history.sales ?? 0,
+		operatingProfit: history.operating_profit ?? 0,
+		eps: history.eps ?? 0,
+		equityRatio: history.equity_ratio ?? 0,
+		operatingCF: history.operating_cf ?? 0,
+		cash: history.cash ?? 0,
+		dividend: history.dividend ?? 0,
+		payoutRatio: history.payout_ratio ?? 0,
+	};
 }
 
-// Fetch all stocks with their LATEST FY financial data
+// TODO: スコア計算をフロントでやるのか計算したものをDBに入れておくのか
+
+// stocks テーブルから全銘柄を取得
 export async function getStocks(): Promise<Stock[]> {
-  // 1. Get all stocks
+  // stocks テーブルから全銘柄を取得
   const { data: stocksData, error: stocksError } = await supabase
     .from("stocks")
     .select("*");
@@ -34,13 +29,10 @@ export async function getStocks(): Promise<Stock[]> {
     return [];
   }
 
-  // 2. Get latest FY data for each stock
-  // Optimally efficiently: Select distinct on code order by year desc
-  // For now simple loop or getting all history and filtering in JS (dataset is small)
+  // 最新の決算情報を取得 (レーダーチャート用)
   const { data: historyData, error: historyError } = await supabase
     .from("financial_history")
     .select("*")
-    .eq("period", "FY")
     .order("year", { ascending: false });
 
   if (historyError || !historyData) {
@@ -48,48 +40,20 @@ export async function getStocks(): Promise<Stock[]> {
     return [];
   }
 
-  // Map to Stock objects
+  // Stock 型にマッピング
   const stocks: Stock[] = stocksData.map((s) => {
-    // Find latest FY record for this stock
+    // 最新の決算レコードを取得
     const history = historyData.find((h) => h.code === s.code);
 
-    // Default metrics if no history
-    let metrics: EvaluationMetrics = {
-      sales: 0,
-      operatingProfitMargin: 0,
-      eps: 0,
-      equityRatio: 0,
-      operatingCashFlow: 0,
-      cash: 0,
-      dividendPerShare: 0,
-      payoutRatio: 0,
-    };
-
-    let currentPrice = 0;
-    let dividendYield = 0;
-
-    if (history) {
-      metrics = mapToMetrics(history);
-      // Mocking current price logic based on dividend yield for demo
-      // In real app, we need a 'prices' table or API for current price.
-      // For now, let's reverse calculate price from yield if we had it, or just use mock fixed values or fetch from real API if possible.
-      // Since we dropped mockStocks.ts, we need a price source.
-      // Let's assume Price ~ Dividend / 0.04 (4% yield assumption for fallback)
-      // OR, retrieve 'currentPrice' if we added it to stocks table (we didn't).
-      // Let's use a mock mapping or random for demo purposes if not in DB.
-
-      // Actually, looking at sample CSV, it doesn't have price.
-      // I will implement a simpler fallback:
-      currentPrice = history.dividends * 25; // approx 4% yield
-      dividendYield = (history.dividends / currentPrice) * 100;
-    }
+    // 各評価項目の最新値
+    const metrics = mapToMetrics(history);
 
     return {
       code: s.code,
       name: s.name,
       industry: s.industry,
-      currentPrice,
-      dividendYield,
+      price: s.price ?? 0,
+      dividendYield: s.dividend_yield ?? 0,
       metrics,
       score: calculateScore(metrics),
     };
@@ -99,8 +63,40 @@ export async function getStocks(): Promise<Stock[]> {
 }
 
 export async function getStockByCode(code: string): Promise<Stock | null> {
-  const all = await getStocks();
-  return all.find((s) => s.code === code) || null;
+  // stocks テーブルから銘柄情報を取得
+  const { data, error } = await supabase
+    .from("stocks")
+    .select("*")
+    .eq("code", code);
+
+  if (error) {
+    console.error("Error fetching stock:", error);
+    return null;
+  }
+
+  // 最新の決算レコードを取得
+  const { data: historyData, error: historyError } = await supabase
+    .from("financial_history")
+    .select("*")
+    .eq("code", code)
+    .order("year", { ascending: false });
+
+  if (historyError || !historyData) {
+    console.error("Error fetching history:", historyError);
+    return null;
+  }
+
+  const metrics = mapToMetrics(historyData[0]);
+
+  return {
+    code: data[0].code,
+    name: data[0].name,
+    industry: data[0].industry,
+    price: data[0].price ?? 0,
+    dividendYield: data[0].dividend_yield ?? 0,
+    metrics,
+    score: calculateScore(metrics),
+  };
 }
 
 export async function getFinancialHistory(

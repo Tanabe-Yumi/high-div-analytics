@@ -17,12 +17,12 @@ type ScoreChartProps = {
 export const ScoreChart = ({ score }: ScoreChartProps) => {
   const data = [
     { subject: "売上", value: score.sales, fullMark: 5 },
-    { subject: "営利", value: score.operatingProfitMargin, fullMark: 5 },
+    { subject: "営利", value: score.operatingProfit, fullMark: 5 },
     { subject: "EPS", value: score.eps, fullMark: 5 },
     { subject: "自己資本", value: score.equityRatio, fullMark: 5 },
-    { subject: "営業CF", value: score.operatingCashFlow, fullMark: 5 },
+    { subject: "営業CF", value: score.operatingCF, fullMark: 5 },
     { subject: "現金", value: score.cash, fullMark: 5 },
-    { subject: "一株配当", value: score.dividendPerShare, fullMark: 5 },
+    { subject: "一株配当", value: score.dividend, fullMark: 5 },
     { subject: "配当性向", value: score.payoutRatio, fullMark: 5 },
   ];
 

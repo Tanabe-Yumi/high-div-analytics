@@ -1,49 +1,42 @@
 // TODO: 重複した interface が多いので簡素化する
 
 export interface EvaluationMetrics {
-  sales: number; // 売上 (百万円)
-  operatingProfitMargin: number; // 営業利益率 (%)
-  eps: number; // EPS (円)
-  equityRatio: number; // 自己資本比率 (%)
-  operatingCashFlow: number; // 営業キャッシュフロー (百万円)
-  cash: number; // 現金同等物 (百万円)
-  dividendPerShare: number; // 一株配当 (円)
-  payoutRatio: number; // 配当性向 (%)
-}
-
-export interface Score {
   sales: number;
-  operatingProfitMargin: number;
+  operatingProfit: number;
   eps: number;
   equityRatio: number;
-  operatingCashFlow: number;
+  operatingCF: number;
   cash: number;
-  dividendPerShare: number;
+  dividend: number;
   payoutRatio: number;
+}
+
+export interface Score extends EvaluationMetrics {
   total: number;
 }
 
 export interface Stock {
   code: string;
   name: string;
-  currentPrice: number;
+  price: number;
   dividendYield: number; // 配当利回り (%)
   industry: string; // 業種
   metrics: EvaluationMetrics;
   score?: Score; // Calculated score
+  updatedAt?: string; // 株価更新日時
 }
 
 export interface FinancialHistory {
   id: string;
   code: string;
   year: number;
-  period: string; // 'FY', '1Q', etc.
+  period: string;
   sales: number;
   operating_profit: number;
   eps: number;
-  dividends: number;
-  payout_ratio: number;
   equity_ratio: number;
-  operating_cash_flow: number;
-  cash_equivalents: number;
+  operating_cf: number;
+  cash: number;
+  dividend: number;
+  payout_ratio: number;
 }

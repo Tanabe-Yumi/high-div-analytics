@@ -7,26 +7,24 @@ import { EvaluationMetrics, Score } from "@/types/stock";
 export const calculateScore = (metrics: EvaluationMetrics): Score => {
   const score: Score = {
     sales: scoreSales(metrics.sales),
-    operatingProfitMargin: scoreOperatingProfitMargin(
-      metrics.operatingProfitMargin,
-    ),
+    operatingProfit: scoreOperatingProfit(metrics.operatingProfit),
     eps: scoreEPS(metrics.eps),
     equityRatio: scoreEquityRatio(metrics.equityRatio),
-    operatingCashFlow: scoreOperatingCashFlow(metrics.operatingCashFlow),
+    operatingCF: scoreOperatingCF(metrics.operatingCF),
     cash: scoreCash(metrics.cash),
-    dividendPerShare: scoreDividendPerShare(metrics.dividendPerShare),
+    dividend: scoreDividend(metrics.dividend),
     payoutRatio: scorePayoutRatio(metrics.payoutRatio),
     total: 0,
   };
 
   score.total =
     score.sales +
-    score.operatingProfitMargin +
+    score.operatingProfit +
     score.eps +
     score.equityRatio +
-    score.operatingCashFlow +
+    score.operatingCF +
     score.cash +
-    score.dividendPerShare +
+    score.dividend +
     score.payoutRatio;
 
   return score;
@@ -41,8 +39,8 @@ const scoreSales = (value: number): number => {
   return 1;
 };
 
-// 2. 営業利益率 (Operating Profit Margin)
-const scoreOperatingProfitMargin = (value: number): number => {
+// 2. 営業利益率 (Operating Profit)
+const scoreOperatingProfit = (value: number): number => {
   if (value >= 15) return 5;
   if (value >= 10) return 4;
   if (value >= 8) return 3;
@@ -69,7 +67,7 @@ const scoreEquityRatio = (value: number): number => {
 };
 
 // 5. 営業キャッシュフロー (Operating Cash Flow)
-const scoreOperatingCashFlow = (value: number): number => {
+const scoreOperatingCF = (value: number): number => {
   if (value >= 100000) return 5;
   if (value >= 50000) return 4;
   if (value >= 10000) return 3;
@@ -86,8 +84,8 @@ const scoreCash = (value: number): number => {
   return 1;
 };
 
-// 7. 一株配当 (Dividend Per Share)
-const scoreDividendPerShare = (value: number): number => {
+// 7. 一株配当 (Dividend)
+const scoreDividend = (value: number): number => {
   if (value >= 150) return 5;
   if (value >= 100) return 4;
   if (value >= 70) return 3;
