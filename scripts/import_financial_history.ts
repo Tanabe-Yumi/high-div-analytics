@@ -29,13 +29,13 @@ interface CSVRecord {
   year: string;
   period: string;
   sales: string;
-  operating_profit: string;
-  eps: string;
-  equity_ratio: string;
-  operating_cf: string;
-  cash: string;
-  dividend: string;
+  operating_profit_margin: string;
+  earnings_per_share: string;
+  operating_cash_flow: string;
+  dividend_per_share: string;
   payout_ratio: string;
+  equity_ratio: string;
+  cash: string;
 }
 
 async function importData() {
@@ -60,13 +60,13 @@ async function importData() {
           year: parseInt(record.year),
           period: record.period,
           sales: parseFloat(record.sales) || null,
-          operating_profit: parseFloat(record.operating_profit) || null,
-          eps: parseFloat(record.eps) || null,
-          equity_ratio: parseFloat(record.equity_ratio) || null,
-          operating_cf: parseFloat(record.operating_cf) || null,
-          cash: parseFloat(record.cash) || null,
-          dividend: parseFloat(record.dividend) || null,
+          operating_profit_margin: parseFloat(record.operating_profit_margin) || null,
+          earnings_per_share: parseFloat(record.earnings_per_share) || null,
+          operating_cash_flow: parseFloat(record.operating_cash_flow) || null,
+          dividend_per_share: parseFloat(record.dividend_per_share) || null,
           payout_ratio: parseFloat(record.payout_ratio) || null,
+          equity_ratio: parseFloat(record.equity_ratio) || null,
+          cash: parseFloat(record.cash) || null,
         },
         { onConflict: "code,year,period" },
       );

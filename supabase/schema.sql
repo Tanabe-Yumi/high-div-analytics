@@ -17,16 +17,26 @@ create table if not exists stocks (
 create table if not exists financial_history (
   id uuid default uuid_generate_v4() primary key,
   code text references stocks(code) on delete cascade not null,
-  year integer not null, -- e.g., 2023
-  period text not null, -- e.g., 'FY' (Full Year), '1Q', '2Q', '3Q'
-  sales numeric, -- 売上 (百万円)
-  operating_profit numeric, -- 営業利益 (百万円)
-  eps numeric, -- EPS (円)
-  equity_ratio numeric, -- 自己資本比率 (%)
-  operating_cf numeric, -- 営業CF (百万円)
-  cash numeric, -- 現金同等物 (百万円)
-  dividend numeric, -- 一株配当 (円)
-  payout_ratio numeric, -- 配当性向 (%)
+  -- 決算年度
+  year integer not null,
+  -- 通期(FY), 1Q, 2Q, 3Q
+  period text not null,
+  -- 売上 (百万円)
+  sales numeric,
+  -- 営業利益率 (%)
+  operating_profit_margin numeric,
+  -- EPS (円)
+  earnings_per_share numeric,
+  -- 営業CF (百万円)
+  operating_cash_flow numeric,
+  -- 一株配当 (円)
+  dividend_per_share numeric,
+  -- 配当性向 (%)
+  payout_ratio numeric,
+  -- 自己資本比率 (%)
+  equity_ratio numeric,
+  -- 現金等 (百万円)
+  cash numeric,
   created_at timestamptz not null default now(),
   
   -- stock/year/period ごとにユニークなレコードとする

@@ -7,25 +7,25 @@ import { EvaluationMetrics, Score } from "@/types/stock";
 export const calculateScore = (metrics: EvaluationMetrics): Score => {
   const score: Score = {
     sales: scoreSales(metrics.sales),
-    operatingProfit: scoreOperatingProfit(metrics.operatingProfit),
+    operatingProfitMargin: scoreOperatingProfit(metrics.operatingProfitMargin),
     eps: scoreEPS(metrics.eps),
-    equityRatio: scoreEquityRatio(metrics.equityRatio),
     operatingCF: scoreOperatingCF(metrics.operatingCF),
-    cash: scoreCash(metrics.cash),
-    dividend: scoreDividend(metrics.dividend),
+    dividendPerShare: scoreDividend(metrics.dividendPerShare),
     payoutRatio: scorePayoutRatio(metrics.payoutRatio),
+    equityRatio: scoreEquityRatio(metrics.equityRatio),
+    cash: scoreCash(metrics.cash),
     total: 0,
   };
 
   score.total =
     score.sales +
-    score.operatingProfit +
+    score.operatingProfitMargin +
     score.eps +
-    score.equityRatio +
     score.operatingCF +
-    score.cash +
-    score.dividend +
-    score.payoutRatio;
+    score.dividendPerShare +
+    score.payoutRatio +
+    score.equityRatio +
+    score.cash;
 
   return score;
 };
@@ -39,7 +39,7 @@ const scoreSales = (value: number): number => {
   return 1;
 };
 
-// 2. 営業利益率 (Operating Profit)
+// 2. 営業利益率 (Operating Profit Margin)
 const scoreOperatingProfit = (value: number): number => {
   if (value >= 15) return 5;
   if (value >= 10) return 4;
@@ -57,16 +57,7 @@ const scoreEPS = (value: number): number => {
   return 1;
 };
 
-// 4. 自己資本比率 (Equity Ratio)
-const scoreEquityRatio = (value: number): number => {
-  if (value >= 60) return 5;
-  if (value >= 50) return 4;
-  if (value >= 40) return 3;
-  if (value >= 30) return 2;
-  return 1;
-};
-
-// 5. 営業キャッシュフロー (Operating Cash Flow)
+// 4. 営業キャッシュフロー (Operating Cash Flow)
 const scoreOperatingCF = (value: number): number => {
   if (value >= 100000) return 5;
   if (value >= 50000) return 4;
@@ -75,16 +66,7 @@ const scoreOperatingCF = (value: number): number => {
   return 1; // Negative is bad
 };
 
-// 6. 現金 (Cash)
-const scoreCash = (value: number): number => {
-  if (value >= 100000) return 5;
-  if (value >= 50000) return 4;
-  if (value >= 10000) return 3;
-  if (value >= 5000) return 2;
-  return 1;
-};
-
-// 7. 一株配当 (Dividend)
+// 5. 一株配当 (Dividend)
 const scoreDividend = (value: number): number => {
   if (value >= 150) return 5;
   if (value >= 100) return 4;
@@ -93,7 +75,7 @@ const scoreDividend = (value: number): number => {
   return 1;
 };
 
-// 8. 配当性向 (Payout Ratio) - Healthy range (30-50%) is best
+// 6. 配当性向 (Payout Ratio) - Healthy range (30-50%) is best
 const scorePayoutRatio = (value: number): number => {
   if (value >= 30 && value <= 50) return 5;
   if (value > 50 && value <= 70) return 4;
@@ -101,4 +83,22 @@ const scorePayoutRatio = (value: number): number => {
   if (value > 0 && value < 30) return 3; // Low but safe
   if (value > 90) return 2; // Very risky
   return 1; // Negative or 0 without specific reason
+};
+
+// 7. 自己資本比率 (Equity Ratio)
+const scoreEquityRatio = (value: number): number => {
+  if (value >= 60) return 5;
+  if (value >= 50) return 4;
+  if (value >= 40) return 3;
+  if (value >= 30) return 2;
+  return 1;
+};
+
+// 8. 現金 (Cash)
+const scoreCash = (value: number): number => {
+  if (value >= 100000) return 5;
+  if (value >= 50000) return 4;
+  if (value >= 10000) return 3;
+  if (value >= 5000) return 2;
+  return 1;
 };

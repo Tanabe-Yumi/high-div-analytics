@@ -1,8 +1,7 @@
 "use client";
 
-// FIXME: 表示がおかしい
-
-// IDEA: サーバーコンポーネントにできるか？？
+// TODO: 表示がおかしい
+// TODO: サーバーコンポーネントにできるか？？
 
 import { FinancialHistory } from "@/types/stock";
 import {
@@ -23,12 +22,12 @@ type HistoricalChartProps = {
 
 export const HistoricalChart = ({ history }: HistoricalChartProps) => {
   // Filter for FY only for cleaner chart, or use all? Usually FY trends are best.
-  // FIXME: 3月決算以外の会社もある
+  // TODO: 3月決算以外も考慮した表示に変更
   const data = history.filter((h) => h.period === "FY");
 
   return (
     <div className="w-full h-100">
-      <h3 className="text-lg font-bold mb-4">過去10年の業績推移 (IFRS/FY)</h3>
+      <h3 className="text-lg font-bold mb-4">過去10年の業績推移</h3>
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}
@@ -59,6 +58,12 @@ export const HistoricalChart = ({ history }: HistoricalChartProps) => {
             stroke="#82ca9d"
             label={{ value: "円", angle: 90, position: "insideRight" }}
           />
+          <YAxis
+            yAxisId="right2"
+            orientation="right"
+            stroke="#ff7300"
+            label={{ value: "%", angle: 90, position: "insideRight" }}
+          />
 
           <Tooltip
             formatter={(value: any) =>
@@ -78,17 +83,17 @@ export const HistoricalChart = ({ history }: HistoricalChartProps) => {
           <Line
             yAxisId="right"
             type="monotone"
-            dataKey="eps"
-            name="EPS"
-            stroke="#ff7300"
+            dataKey="dividend_per_share"
+            name="配当金"
+            stroke="#82ca9d"
             strokeWidth={2}
           />
           <Line
-            yAxisId="right"
+            yAxisId="right2"
             type="monotone"
-            dataKey="dividends"
-            name="配当金"
-            stroke="#82ca9d"
+            dataKey="operating_profit_margin"
+            name="営業利益率"
+            stroke="#ff7300"
             strokeWidth={2}
           />
         </ComposedChart>

@@ -5,12 +5,12 @@ import { calculateScore } from "@/lib/scoring";
 function mapToMetrics(history: FinancialHistory): EvaluationMetrics {
 	return {
 		sales: history.sales ?? 0,
-		operatingProfit: history.operating_profit ?? 0,
-		eps: history.eps ?? 0,
+		operatingProfitMargin: history.operating_profit_margin ?? 0,
+		eps: history.earnings_per_share ?? 0,
 		equityRatio: history.equity_ratio ?? 0,
-		operatingCF: history.operating_cf ?? 0,
+		operatingCF: history.operating_cash_flow ?? 0,
 		cash: history.cash ?? 0,
-		dividend: history.dividend ?? 0,
+		dividendPerShare: history.dividend_per_share ?? 0,
 		payoutRatio: history.payout_ratio ?? 0,
 	};
 }
@@ -52,10 +52,12 @@ export async function getStocks(): Promise<Stock[]> {
       code: s.code,
       name: s.name,
       industry: s.industry,
+      market: s.market,
       price: s.price ?? 0,
       dividendYield: s.dividend_yield ?? 0,
       metrics,
       score: calculateScore(metrics),
+      updatedAt: s.updated_at,
     };
   });
 
@@ -92,10 +94,12 @@ export async function getStockByCode(code: string): Promise<Stock | null> {
     code: data[0].code,
     name: data[0].name,
     industry: data[0].industry,
+    market: data[0].market,
     price: data[0].price ?? 0,
     dividendYield: data[0].dividend_yield ?? 0,
     metrics,
     score: calculateScore(metrics),
+    updatedAt: data[0].updated_at,
   };
 }
 
