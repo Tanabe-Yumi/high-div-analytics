@@ -1,19 +1,12 @@
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { getStockByCode, getFinancialHistory, getStocks } from "@/lib/api";
+import { getStockByCode, getFinancialHistory } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ScoreChart } from "@/components/ScoreChart";
 import { HistoricalChart } from "@/components/HistoricalChart";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
-export const generateStaticParams = async () => {
-  const stocks = await getStocks();
-  return stocks.map((stock) => ({
-    code: stock.code,
-  }));
-};
 
 const StockDetailPage = async ({
   params,
@@ -38,34 +31,34 @@ const StockDetailPage = async ({
     },
     {
       label: "営業利益",
-      value: `${metrics.operatingProfit.toLocaleString()}百万円`,
-      score: score?.operatingProfit,
+      value: `${metrics.operatingProfitMargin.toLocaleString()}百万円`,
+      score: score?.operatingProfitMargin,
     },
     { label: "EPS", value: `${metrics.eps}円`, score: score?.eps },
-    {
-      label: "自己資本比率",
-      value: `${metrics.equityRatio}%`,
-      score: score?.equityRatio,
-    },
     {
       label: "営業CF",
       value: `${metrics.operatingCF.toLocaleString()}百万円`,
       score: score?.operatingCF,
     },
     {
-      label: "現金等",
-      value: `${metrics.cash.toLocaleString()}百万円`,
-      score: score?.cash,
-    },
-    {
       label: "一株配当",
-      value: `${metrics.dividend.toLocaleString()}円`,
-      score: score?.dividend,
+      value: `${metrics.dividendPerShare.toLocaleString()}円`,
+      score: score?.dividendPerShare,
     },
     {
       label: "配当性向",
       value: `${metrics.payoutRatio}%`,
       score: score?.payoutRatio,
+    },
+    {
+      label: "自己資本比率",
+      value: `${metrics.equityRatio}%`,
+      score: score?.equityRatio,
+    },
+    {
+      label: "現金等",
+      value: `${metrics.cash.toLocaleString()}百万円`,
+      score: score?.cash,
     },
   ];
 
@@ -115,7 +108,7 @@ const StockDetailPage = async ({
               <CardContent className="px-4 py-2">
                 <p className="text-sm text-muted-foreground">現在値</p>
                 <p className="text-2xl font-bold">
-                  ¥{stock.price.toLocaleString()}
+                  ¥{stock.price?.toLocaleString()}
                 </p>
               </CardContent>
             </Card>

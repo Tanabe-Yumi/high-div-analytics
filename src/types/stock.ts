@@ -1,42 +1,51 @@
 // TODO: 重複した interface が多いので簡素化する
 
+// フロントで使う用の型定義
 export interface EvaluationMetrics {
   sales: number;
-  operatingProfit: number;
+  operatingProfitMargin: number;
   eps: number;
-  equityRatio: number;
   operatingCF: number;
-  cash: number;
-  dividend: number;
+  dividendPerShare: number;
   payoutRatio: number;
+  equityRatio: number;
+  cash: number;
 }
 
+// スコアを含む型定義
 export interface Score extends EvaluationMetrics {
   total: number;
 }
 
+// フロントで使う用の型定義
 export interface Stock {
   code: string;
   name: string;
-  price: number;
-  dividendYield: number; // 配当利回り (%)
-  industry: string; // 業種
+  // 業種
+  industry?: string;
+  // 市場
+  market?: string;
+  // 株価
+  price?: number;
+  // 配当利回り (%)
+  dividendYield?: number;
   metrics: EvaluationMetrics;
-  score?: Score; // Calculated score
-  updatedAt?: string; // 株価更新日時
+  score?: Score;
+  updatedAt: string;
 }
 
+// DB から取得した レコードの型定義
 export interface FinancialHistory {
   id: string;
   code: string;
   year: number;
   period: string;
-  sales: number;
-  operating_profit: number;
-  eps: number;
-  equity_ratio: number;
-  operating_cf: number;
-  cash: number;
-  dividend: number;
-  payout_ratio: number;
+  sales?: number;
+  operating_profit_margin?: number;
+  earnings_per_share?: number;
+  operating_cash_flow?: number;
+  dividend_per_share?: number;
+  payout_ratio?: number;
+  equity_ratio?: number;
+  cash?: number;
 }
