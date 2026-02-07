@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { parse } from "csv-parse/sync";
 import dotenv from "dotenv";
+import { Database } from "@/types/database.types";
 
 // 環境変数読み込み
 dotenv.config({ path: ".env.local" });
@@ -22,7 +23,7 @@ console.log(
   `使用する認証情報: ${supabaseUrl} (Key length: ${supabaseKey.length})`,
 );
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 
 interface CSVRecord {
   code: string;

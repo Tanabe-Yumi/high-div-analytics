@@ -33,19 +33,3 @@ export interface Stock {
   score?: Score;
   updatedAt: string;
 }
-
-// DB から取得した レコードの型定義
-export interface FinancialHistory {
-  id: string;
-  code: string;
-  year: number;
-  period: string;
-  sales?: number;
-  operating_profit_margin?: number;
-  earnings_per_share?: number;
-  operating_cash_flow?: number;
-  dividend_per_share?: number;
-  payout_ratio?: number;
-  equity_ratio?: number;
-  cash?: number;
-}

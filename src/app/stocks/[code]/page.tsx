@@ -30,8 +30,8 @@ const StockDetailPage = async ({
       score: score?.sales,
     },
     {
-      label: "営業利益",
-      value: `${metrics.operatingProfitMargin.toLocaleString()}百万円`,
+      label: "営業利益率",
+      value: `${metrics.operatingProfitMargin.toLocaleString()}%`,
       score: score?.operatingProfitMargin,
     },
     { label: "EPS", value: `${metrics.eps}円`, score: score?.eps },
