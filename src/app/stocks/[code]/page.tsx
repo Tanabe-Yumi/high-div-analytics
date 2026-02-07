@@ -125,7 +125,7 @@ const StockDetailPage = async ({
                   配当利回り
                 </p>
                 <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
-                  {stock.dividendYield.toFixed(2)}%
+                  {stock.dividendYield}%
                 </p>
               </CardContent>
             </Card>

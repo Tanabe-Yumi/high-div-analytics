@@ -29,7 +29,7 @@ export const StockCard = ({ stock }: { stock: Stock }) => {
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-emerald-600">
-            {stock.dividendYield.toFixed(2)}%
+            {stock.dividendYield}%
           </div>
           <p className="text-xs text-muted-foreground">配当利回り</p>
         </div>

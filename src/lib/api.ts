@@ -3,16 +3,16 @@ import { Stock, FinancialHistory, EvaluationMetrics } from "@/types/stock";
 import { calculateScore } from "@/lib/scoring";
 
 function mapToMetrics(history: FinancialHistory): EvaluationMetrics {
-  return {
-    sales: history.sales || 0,
-    operatingProfit: history.operating_profit || 0,
-    eps: history.eps || 0,
-    equityRatio: history.equity_ratio || 0,
-    operatingCF: history.operating_cf || 0,
-    cash: history.cash || 0,
-    dividend: history.dividend || 0,
-    payoutRatio: history.payout_ratio || 0,
-  };
+	return {
+		sales: history.sales ?? 0,
+		operatingProfit: history.operating_profit ?? 0,
+		eps: history.eps ?? 0,
+		equityRatio: history.equity_ratio ?? 0,
+		operatingCF: history.operating_cf ?? 0,
+		cash: history.cash ?? 0,
+		dividend: history.dividend ?? 0,
+		payoutRatio: history.payout_ratio ?? 0,
+	};
 }
 
 // TODO: スコア計算をフロントでやるのか計算したものをDBに入れておくのか
@@ -52,8 +52,8 @@ export async function getStocks(): Promise<Stock[]> {
       code: s.code,
       name: s.name,
       industry: s.industry,
-      price: s.price,
-      dividendYield: s.dividend_yield,
+      price: s.price ?? 0,
+      dividendYield: s.dividend_yield ?? 0,
       metrics,
       score: calculateScore(metrics),
     };
@@ -92,8 +92,8 @@ export async function getStockByCode(code: string): Promise<Stock | null> {
     code: data[0].code,
     name: data[0].name,
     industry: data[0].industry,
-    price: data[0].price,
-    dividendYield: data[0].dividend_yield,
+    price: data[0].price ?? 0,
+    dividendYield: data[0].dividend_yield ?? 0,
     metrics,
     score: calculateScore(metrics),
   };
