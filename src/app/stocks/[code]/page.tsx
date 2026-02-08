@@ -1,12 +1,24 @@
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { getStockByCode, getFinancialHistory } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ScoreChart } from "@/components/ScoreChart";
 import { HistoricalChart } from "@/components/HistoricalChart";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, InfoIcon } from "lucide-react";
 import Link from "next/link";
+import { evaluationIndex } from "@/constants/evaluations";
 
 const StockDetailPage = async ({
   params,
@@ -30,8 +42,8 @@ const StockDetailPage = async ({
       score: score?.sales,
     },
     {
-      label: "営業利益",
-      value: `${metrics.operatingProfitMargin.toLocaleString()}百万円`,
+      label: "営業利益率",
+      value: `${metrics.operatingProfitMargin.toLocaleString()}%`,
       score: score?.operatingProfitMargin,
     },
     { label: "EPS", value: `${metrics.eps}円`, score: score?.eps },
@@ -76,11 +88,14 @@ const StockDetailPage = async ({
         {/* 左側: ヘッダーとスコア */}
         <div className="md:col-span-1 space-y-6">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm font-medium text-muted-foreground">
-                {stock.code}
-              </span>
-              <Badge variant="secondary">{stock.industry}</Badge>
+            <div className="flex flex-wrap items-center gap-1 mb-2">
+              <Badge variant="secondary">{stock.code}</Badge>
+              <Badge className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+                {stock.industry}
+              </Badge>
+              <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+                {stock.market}
+              </Badge>
             </div>
             <h1 className="text-3xl font-bold tracking-tight">{stock.name}</h1>
           </div>
@@ -127,15 +142,38 @@ const StockDetailPage = async ({
           <h2 className="text-xl font-bold">指標詳細 (最新期)</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {metricItems.map((item) => (
-              <Card
-                key={item.label}
-                className="group hover:bg-muted/50 transition-colors"
-              >
-                <CardContent className="px-4 flex flex-col h-full">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {item.label}
-                    </span>
+              <Item key={item.label} variant="outline" asChild>
+                <ItemContent>
+                  <ItemTitle className="w-full flex justify-between items-center">
+                    <div className="flex justify-center items-center gap-x-1">
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {item.label}
+                      </span>
+                      {/* 評価項目の説明 */}
+                      <HoverCard openDelay={100} closeDelay={100}>
+                        <HoverCardTrigger asChild>
+                          <InfoIcon className="size-4 stroke-muted-foreground" />
+                        </HoverCardTrigger>
+                        <HoverCardContent side="top" className="text-sm">
+                          <div className="flex flex-col gap-1">
+                            <h4 className="font-medium">
+                              {
+                                evaluationIndex.find(
+                                  (e) => e.label === item.label,
+                                )?.longLabel
+                              }
+                            </h4>
+                            <p>
+                              {
+                                evaluationIndex.find(
+                                  (e) => e.label === item.label,
+                                )?.descliption
+                              }
+                            </p>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
                     <Badge
                       variant="secondary"
                       className={cn(
@@ -146,10 +184,12 @@ const StockDetailPage = async ({
                     >
                       {item.score}
                     </Badge>
-                  </div>
-                  <p className="text-lg font-semibold mt-auto">{item.value}</p>
-                </CardContent>
-              </Card>
+                  </ItemTitle>
+                  <ItemDescription className="w-full text-lg text-black font-semibold mt-auto">
+                    {item.value}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
             ))}
           </div>
 

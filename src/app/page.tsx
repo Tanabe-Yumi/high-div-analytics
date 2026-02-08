@@ -20,6 +20,8 @@ const Home = async () => {
         </p>
       </section>
 
+      {/* TODO: ページネーション */}
+
       {sortedStocks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 border-2 border-dashed rounded-xl border-muted bg-muted/5">
           <div className="p-4 rounded-full bg-muted/20">

@@ -43,20 +43,40 @@ create table if not exists financial_history (
   unique(code, year, period)
 );
 
+-- scores テーブル
+create table if not exists scores (
+  code text primary key references stocks(code) on delete cascade academic,
+  sales integer default 0,
+  operating_profit_margin integer default 0,
+  earnings_per_share integer default 0,
+  operating_cash_flow integer default 0,
+  dividend_per_share integer default 0,
+  payout_ratio integer default 0,
+  equity_ratio integer default 0,
+  cash integer default 0,
+  total integer default 0,
+  updated_at timestamptz not null default now()
+);
+
 -- updated_at を自動更新するトリガーを設定
 create extension if not exists moddatetime schema extensions;
 create trigger handle_updated_at before update on stocks
+  for each row execute procedure moddatetime (updated_at);
+create trigger handle_updated_at_scores before update on scores
   for each row execute procedure moddatetime (updated_at);
 
 -- Row Level Security (RLS) を有効化
 alter table stocks enable row level security;
 alter table financial_history enable row level security;
+alter table scores enable row level security;
 
 -- 誰でも読み取り可能にするポリシーを設定
 create policy "Allow public read access on stocks"
   on stocks for select using (true);
 create policy "Allow public read access on financial_history"
   on financial_history for select using (true);
+create policy "Allow public read access on scores"
+  on scores for select using (true);
 
 -- 認証済み(service_role)、または匿名での insert/update を許可するポリシーを設定
 -- 本番環境では、service_role に制限すべき
@@ -64,3 +84,5 @@ create policy "Allow anon insert/update for demo"
   on stocks for insert with check (true);
 create policy "Allow anon insert/update for demo history"
   on financial_history for insert with check (true);
+create policy "Allow service_role insert/update on scores"
+  on scores for all using (true);

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
+import { Loader } from "@/components/layout/Loader";
 import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -34,7 +36,11 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <main className="container mx-auto py-6 px-4 md:px-8">{children}</main>
+        <Suspense fallback={<Loader label="読み込み中..." />}>
+          <main className="container mx-auto py-6 px-4 md:px-8">
+            {children}
+          </main>
+        </Suspense>
       </body>
     </html>
   );

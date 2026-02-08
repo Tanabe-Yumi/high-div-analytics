@@ -3,7 +3,6 @@
 // TODO: 表示がおかしい
 // TODO: サーバーコンポーネントにできるか？？
 
-import { FinancialHistory } from "@/types/stock";
 import {
   ComposedChart,
   Line,
@@ -15,9 +14,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Tables } from "@/types/database.types";
 
 type HistoricalChartProps = {
-  history: FinancialHistory[];
+  history: Tables<"financial_history">[];
 };
 
 export const HistoricalChart = ({ history }: HistoricalChartProps) => {

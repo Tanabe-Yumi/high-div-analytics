@@ -20,6 +20,10 @@ export const Header = () => {
               <BarChart3 className="mr-2 h-4 w-4" />
               銘柄一覧
             </Link>
+
+            {/* TODO: リストページ??（検索、ソート） */}
+
+            {/* TODO: 保有銘柄ページ */}
           </nav>
         </div>
       </div>
