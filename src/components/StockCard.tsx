@@ -9,14 +9,17 @@ export const StockCard = ({ stock }: { stock: Stock }) => {
   if (!score) return null;
 
   return (
-    <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:border-emerald-500/50 gap-4 border-accent-foreground">
+    <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:border-emerald-500/50 gap-3 border-accent-foreground">
       <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-0">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">
-              {stock.code}
-            </span>
-            <Badge variant="secondary">{stock.industry}</Badge>
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-1">
+            <Badge variant="secondary">{stock.code}</Badge>
+            <Badge className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+              {stock.industry}
+            </Badge>
+            <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+              {stock.market}
+            </Badge>
           </div>
           <Link
             href={`/stocks/${stock.code}`}
@@ -27,11 +30,11 @@ export const StockCard = ({ stock }: { stock: Stock }) => {
             </CardTitle>
           </Link>
         </div>
-        <div className="text-right">
+        <div className="text-right shrink-0">
+          <p className="text-xs text-muted-foreground">配当利回り</p>
           <div className="text-2xl font-bold text-emerald-600">
             {stock.dividendYield}%
           </div>
-          <p className="text-xs text-muted-foreground">配当利回り</p>
         </div>
       </CardHeader>
       <CardContent className="pt-0">
