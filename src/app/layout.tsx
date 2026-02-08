@@ -36,7 +36,7 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <Suspense fallback={<Loader label="Loading..." />}>
+        <Suspense fallback={<Loader label="読み込み中..." />}>
           <main className="container mx-auto py-6 px-4 md:px-8">
             {children}
           </main>

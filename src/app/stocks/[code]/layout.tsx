@@ -7,6 +7,6 @@ export default function StockDetailLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Suspense fallback={<Loader label="Loading..." />}>{children}</Suspense>
+    <Suspense fallback={<Loader label="読み込み中..." />}>{children}</Suspense>
   );
 }
