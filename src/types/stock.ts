@@ -1,6 +1,6 @@
 // TODO: 重複した interface が多いので簡素化する
 
-// フロントで使う用の型定義
+// 評価指標
 export interface EvaluationMetrics {
   sales: number;
   operatingProfitMargin: number;
@@ -12,12 +12,12 @@ export interface EvaluationMetrics {
   cash: number;
 }
 
-// スコアを含む型定義
+// スコア
 export interface Score extends EvaluationMetrics {
   total: number;
 }
 
-// フロントで使う用の型定義
+// 銘柄情報
 export interface Stock {
   code: string;
   name: string;
