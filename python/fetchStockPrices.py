@@ -26,7 +26,10 @@ supabase_url = os.getenv('NEXT_PUBLIC_SUPABASE_URL')
 supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
 
 if not supabase_url or not supabase_key:
-	logger.error("Supabase環境変数が設定されていません")
+	missing = []
+	if not supabase_url: missing.append("NEXT_PUBLIC_SUPABASE_URL")
+	if not supabase_key: missing.append("SUPABASE_SERVICE_ROLE_KEY")
+	logger.error(f"Supabase環境変数が設定されていません: {', '.join(missing)}")
 	sys.exit(1)
 
 supabase: Client = create_client(supabase_url, supabase_key)
