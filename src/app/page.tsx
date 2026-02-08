@@ -1,5 +1,5 @@
 import { getStocks } from "@/lib/api";
-import { StockCard } from "@/components/StockCard";
+import { StockDashboard } from "@/components/StockDashboard";
 import { AlertCircleIcon } from "lucide-react";
 
 const Home = async () => {
@@ -37,11 +37,7 @@ const Home = async () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedStocks.map((stock) => (
-            <StockCard key={stock.code} stock={stock} />
-          ))}
-        </div>
+        <StockDashboard stocks={sortedStocks} />
       )}
     </div>
   );
