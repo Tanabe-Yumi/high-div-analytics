@@ -33,18 +33,41 @@ function mapToScore(scores?: Tables<"scores">): Score {
   };
 }
 
+export interface GetStocksResult {
+  stocks: Stock[];
+  total: number;
+}
+
 // stocks テーブルから全銘柄を取得
-export async function getStocks(): Promise<Stock[]> {
+export async function getStocks(
+  minDividendYield: number = 0,
+  page: number = 0,
+  pageSize: number = 20
+): Promise<GetStocksResult> {
   // stocks join scores
-  const { data: stocksData, error: stocksError } = await supabase.from("stocks")
-    .select(`
+  let query = supabase.from("stocks").select(`
       *,
       scores ( * )
-    `);
+    `, { count: 'exact' });
+
+  if (minDividendYield > 0) {
+    query = query.gte("dividend_yield", minDividendYield);
+  }
+
+  // ページネーション
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+  
+  // ソート: scores.total の降順
+  query = query
+    .order("total", { foreignTable: "scores", ascending: false, nullsFirst: false })
+    .range(from, to);
+
+  const { data: stocksData, error: stocksError, count } = await query;
 
   if (stocksError || !stocksData) {
     console.error("Error fetching stocks:", stocksError);
-    return [];
+    return { stocks: [], total: 0 };
   }
 
   // 最新の決算情報を取得 (レーダーチャート用)
@@ -55,7 +78,7 @@ export async function getStocks(): Promise<Stock[]> {
 
   if (historyError || !historyData) {
     console.error("Error fetching history:", historyError);
-    return [];
+    return { stocks: [], total: 0 };
   }
 
   // Stock 型にマッピング
@@ -82,7 +105,7 @@ export async function getStocks(): Promise<Stock[]> {
     };
   });
 
-  return stocks;
+  return { stocks, total: count ?? 0 };
 }
 
 export async function getStockByCode(code: string): Promise<Stock | null> {

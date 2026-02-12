@@ -26,7 +26,7 @@ export type Database = {
           operating_cash_flow: number | null
           operating_profit_margin: number | null
           payout_ratio: number | null
-          period: string
+          month: number
           sales: number | null
           year: number
         }
@@ -41,7 +41,7 @@ export type Database = {
           operating_cash_flow?: number | null
           operating_profit_margin?: number | null
           payout_ratio?: number | null
-          period: string
+          month: number
           sales?: number | null
           year: number
         }
@@ -56,7 +56,7 @@ export type Database = {
           operating_cash_flow?: number | null
           operating_profit_margin?: number | null
           payout_ratio?: number | null
-          period?: string
+          month?: number
           sales?: number | null
           year?: number
         }

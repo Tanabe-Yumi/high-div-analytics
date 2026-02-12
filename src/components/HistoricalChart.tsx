@@ -23,7 +23,7 @@ type HistoricalChartProps = {
 export const HistoricalChart = ({ history }: HistoricalChartProps) => {
   // Filter for FY only for cleaner chart, or use all? Usually FY trends are best.
   // TODO: 3月決算以外も考慮した表示に変更
-  const data = history.filter((h) => h.period === "FY");
+  const data = history.filter((h) => h.month === 3);
 
   return (
     <div className="w-full h-100">

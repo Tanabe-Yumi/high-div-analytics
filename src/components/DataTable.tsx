@@ -39,11 +39,17 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  currentPage = 0,
+  totalPages = 1,
+  onPageChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -57,18 +63,25 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // サーバーサイドページネーションの場合はgetPaginationRowModelを使用しない
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
+    // ページネーションを手動モードに設定
+    manualPagination: onPageChange !== undefined,
+    pageCount: totalPages,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
       globalFilter,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize: data.length,
+      },
     },
   });
 
@@ -172,23 +185,49 @@ export function DataTable<TData, TValue>({
       {/* ページネーション */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground text-sm">
-          {table.getFilteredRowModel().rows.length} 件中{" "}
-          {table.getFilteredSelectedRowModel().rows.length} を選択中
+          {onPageChange ? (
+            <>
+              ページ {currentPage + 1} / {totalPages}
+            </>
+          ) : (
+            <>
+              {table.getFilteredRowModel().rows.length} 件中{" "}
+              {table.getFilteredSelectedRowModel().rows.length} を選択中
+            </>
+          )}
         </div>
         <div className="space-x-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {
+              if (onPageChange) {
+                onPageChange(currentPage - 1);
+              } else {
+                table.previousPage();
+              }
+            }}
+            disabled={
+              onPageChange ? currentPage === 0 : !table.getCanPreviousPage()
+            }
           >
             前へ
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => {
+              if (onPageChange) {
+                onPageChange(currentPage + 1);
+              } else {
+                table.nextPage();
+              }
+            }}
+            disabled={
+              onPageChange
+                ? currentPage >= totalPages - 1
+                : !table.getCanNextPage()
+            }
           >
             次へ
           </Button>

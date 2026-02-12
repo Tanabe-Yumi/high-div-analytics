@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Stock } from "@/types/stock";
 import { Badge } from "@/components/ui/badge";
 
+// TODO: カラム幅を固定したい
+
 export const columns: ColumnDef<Stock>[] = [
   {
     accessorKey: "code",
