@@ -2,9 +2,21 @@ import { getStocks } from "@/lib/api";
 import { StockDashboard } from "@/components/StockDashboard";
 import { AlertCircleIcon } from "lucide-react";
 
-const Home = async () => {
-  const stocks = await getStocks();
+interface SearchParams {
+  min_yield?: string;
+}
+
+const Home = async ({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) => {
+  const params = await searchParams;
+  const minYieldParam = params.min_yield;
+  const minYield = minYieldParam === undefined ? 3.5 : parseFloat(minYieldParam);
+  const stocks = await getStocks(minYield);
   // total score の降順にソート
+  // TODO: ソートはDB側で実行
   const sortedStocks = [...stocks].sort(
     (a, b) => (b.score?.total || 0) - (a.score?.total || 0),
   );

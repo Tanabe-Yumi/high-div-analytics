@@ -34,13 +34,18 @@ function mapToScore(scores?: Tables<"scores">): Score {
 }
 
 // stocks テーブルから全銘柄を取得
-export async function getStocks(): Promise<Stock[]> {
+export async function getStocks(minDividendYield: number = 0): Promise<Stock[]> {
   // stocks join scores
-  const { data: stocksData, error: stocksError } = await supabase.from("stocks")
-    .select(`
+  let query = supabase.from("stocks").select(`
       *,
       scores ( * )
     `);
+
+  if (minDividendYield > 0) {
+    query = query.gte("dividend_yield", minDividendYield);
+  }
+
+  const { data: stocksData, error: stocksError } = await query;
 
   if (stocksError || !stocksData) {
     console.error("Error fetching stocks:", stocksError);
