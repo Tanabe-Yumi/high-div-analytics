@@ -14,12 +14,13 @@ const Home = async ({
 }) => {
   const params = await searchParams;
   const minYieldParam = params.min_yield;
-  const minYield = minYieldParam === undefined ? 3.5 : parseFloat(minYieldParam);
-  
+  const minYield =
+    minYieldParam === undefined ? 3.5 : parseFloat(minYieldParam);
+
   // ページネーションパラメータ
   const pageSize = 20;
   const currentPage = parseInt(params.page || "0");
-  
+
   const result = await getStocks(minYield, currentPage, pageSize);
   const { stocks, total } = result;
 
@@ -33,8 +34,6 @@ const Home = async ({
           配当利回り3.5%以上の優良銘柄を8つの指標で厳選分析。スコアが高いほど健全な財務と高い還元期待を持てます。
         </p>
       </section>
-
-      {/* TODO: ページネーション */}
 
       {stocks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 border-2 border-dashed rounded-xl border-muted bg-muted/5">
@@ -54,7 +53,6 @@ const Home = async ({
         <StockDashboard
           stocks={stocks}
           total={total}
-          minYield={minYield}
           currentPage={currentPage}
           pageSize={pageSize}
         />
