@@ -19,8 +19,8 @@ create table if not exists financial_history (
   code text references stocks(code) on delete cascade not null,
   -- 決算年度
   year integer not null,
-  -- 通期(FY), 1Q, 2Q, 3Q
-  period text not null,
+  -- 決算月
+  month integer not null,
   -- 売上 (百万円)
   sales numeric,
   -- 営業利益率 (%)
@@ -39,8 +39,8 @@ create table if not exists financial_history (
   cash numeric,
   created_at timestamptz not null default now(),
   
-  -- stock/year/period ごとにユニークなレコードとする
-  unique(code, year, period)
+  -- stock/year/month ごとにユニークなレコードとする
+  unique(code, year, month)
 );
 
 -- scores テーブル

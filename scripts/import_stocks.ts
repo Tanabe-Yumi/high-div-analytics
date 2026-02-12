@@ -54,8 +54,8 @@ async function importData() {
         {
           code: record.code,
           name: record.name,
-          industry: record.industry || "",
-          market: record.market || "",
+          industry: record.industry || null,
+          market: record.market || null,
           price: record.price || null,
           dividend_yield: record.dividend_yield || null,
         },

@@ -28,7 +28,7 @@ const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 interface CSVRecord {
   code: string;
   year: string;
-  period: string;
+  month: string;
   sales: string;
   operating_profit_margin: string;
   earnings_per_share: string;
@@ -59,7 +59,7 @@ async function importData() {
         {
           code: record.code,
           year: parseInt(record.year),
-          period: record.period,
+          month: parseInt(record.month),
           sales: parseFloat(record.sales) || null,
           operating_profit_margin: parseFloat(record.operating_profit_margin) || null,
           earnings_per_share: parseFloat(record.earnings_per_share) || null,
@@ -69,11 +69,11 @@ async function importData() {
           equity_ratio: parseFloat(record.equity_ratio) || null,
           cash: parseFloat(record.cash) || null,
         },
-        { onConflict: "code,year,period" },
+        { onConflict: "code,year,month" },
       );
 
     if (historyError) {
-      console.error(`${record.code}/${record.year}/${record.period} のインポートに失敗しました:`, historyError);
+      console.error(`${record.code}/${record.year}/${record.month} のインポートに失敗しました:`, historyError);
     } else {
       process.stdout.write(".");
     }
