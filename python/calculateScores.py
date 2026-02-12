@@ -1,6 +1,5 @@
 import os
 import sys
-import time
 import logging
 from dotenv import load_dotenv
 import pandas as pd
@@ -222,23 +221,58 @@ def calculate_stock_score(df):
 
 	return s
 
+# Supabase から銘柄リストを取得
+def fetch_stocks_from_db():
+	stocks = []
+	start = 0
+	batch_size = 1000
+	
+	try:
+		while True:
+			response = supabase.table('stocks').select('code').range(start, start + batch_size - 1).execute()
+			data = response.data
+			
+			if not data:
+				break
+				
+			stocks.extend(data)
+			logger.info(f"銘柄リスト取得中: {len(data)}件 (合計: {len(stocks)}件)")
+			
+			if len(data) < batch_size:
+				break
+				
+			start += batch_size
+			
+		logger.info(f"銘柄リスト取得完了: {len(stocks)}件")
+		return stocks
+	except Exception as e:
+		logger.error(f"銘柄リスト取得エラー: {e}")
+		# エラーが発生しても、それまでに取得できたデータを返す
+		if stocks:
+			logger.warning(f"一部の銘柄のみ取得しました: {len(stocks)}件")
+			return stocks
+		return []
+
 def main():
 	logger.info("=" * 60)
 	logger.info("スコア計算処理開始")
 	logger.info("=" * 60)
 
-	try:
-		# 1. sotcks から一覧取得
-		stocks = supabase.table('stocks').select('code').execute().data
-		logger.info(f"対象銘柄数: {len(stocks)}件")
+	# 1. sotcks から一覧取得
+	stocks = fetch_stocks_from_db()
+	logger.info(f"対象銘柄数: {len(stocks)}件")
 
-		# 2. history から抽出
-		for stock in stocks:
-			code = stock['code']
+	# 2. history から抽出
+	for stock in stocks:
+		code = stock['code']
 			
+		try:
 			# 各年度の決算データを年の昇順で取得
 			# TODO: 同年で複数の決算データがある場合の処理
 			history = supabase.table('financial_history').select('*').eq('code', code).order('year', desc=False).execute().data
+			if not history:
+				logger.warning(f"⚠️ {code}: 決算データがありません")
+				continue
 			df = pd.DataFrame(history)
 			
 			# 3. スコア計算
@@ -250,11 +284,10 @@ def main():
 
 			supabase.table('scores').upsert(scores).execute()
 			logger.info(f"✓ {code}: スコア保存完了")
+		except Exception as e:
+			logger.error(f"⚠️ {code}: エラー: {e}")
 
-		logger.info("スコア計算処理が正常に完了しました")
-
-	except Exception as e:
-		logger.error(f"エラーが発生しました: {e}")
+	logger.info("スコア計算処理が正常に完了しました")
 
 if __name__ == "__main__":
 	main()

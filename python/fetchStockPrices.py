@@ -37,13 +37,34 @@ logger.info(f"Supabase接続成功: {supabase_url}")
 
 # Supabase から銘柄リストを取得
 def fetch_stocks_from_db():
+	stocks = []
+	start = 0
+	batch_size = 1000
+	
 	try:
-		response = supabase.table('stocks').select('code, name').execute()
-		stocks = response.data
+		while True:
+			response = supabase.table('stocks').select('code, name').range(start, start + batch_size - 1).execute()
+			data = response.data
+			
+			if not data:
+				break
+				
+			stocks.extend(data)
+			logger.info(f"銘柄リスト取得中: {len(data)}件 (合計: {len(stocks)}件)")
+			
+			if len(data) < batch_size:
+				break
+				
+			start += batch_size
+			
 		logger.info(f"銘柄リスト取得完了: {len(stocks)}件")
 		return stocks
 	except Exception as e:
 		logger.error(f"銘柄リスト取得エラー: {e}")
+		# エラーが発生しても、それまでに取得できたデータを返す
+		if stocks:
+			logger.warning(f"一部の銘柄のみ取得しました: {len(stocks)}件")
+			return stocks
 		return []
 
 # Supabase の stocks テーブルを更新
