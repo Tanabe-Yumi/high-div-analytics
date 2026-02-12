@@ -4,6 +4,7 @@ import { AlertCircleIcon } from "lucide-react";
 
 interface SearchParams {
   min_yield?: string;
+  page?: string;
 }
 
 const Home = async ({
@@ -14,12 +15,13 @@ const Home = async ({
   const params = await searchParams;
   const minYieldParam = params.min_yield;
   const minYield = minYieldParam === undefined ? 3.5 : parseFloat(minYieldParam);
-  const stocks = await getStocks(minYield);
-  // total score の降順にソート
-  // TODO: ソートはDB側で実行
-  const sortedStocks = [...stocks].sort(
-    (a, b) => (b.score?.total || 0) - (a.score?.total || 0),
-  );
+  
+  // ページネーションパラメータ
+  const pageSize = 20;
+  const currentPage = parseInt(params.page || "0");
+  
+  const result = await getStocks(minYield, currentPage, pageSize);
+  const { stocks, total } = result;
 
   return (
     <div className="space-y-8">
@@ -34,7 +36,7 @@ const Home = async ({
 
       {/* TODO: ページネーション */}
 
-      {sortedStocks.length === 0 ? (
+      {stocks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 border-2 border-dashed rounded-xl border-muted bg-muted/5">
           <div className="p-4 rounded-full bg-muted/20">
             <AlertCircleIcon className="w-10 h-10 text-muted-foreground" />
@@ -49,7 +51,13 @@ const Home = async ({
           </div>
         </div>
       ) : (
-        <StockDashboard stocks={sortedStocks} />
+        <StockDashboard
+          stocks={stocks}
+          total={total}
+          minYield={minYield}
+          currentPage={currentPage}
+          pageSize={pageSize}
+        />
       )}
     </div>
   );

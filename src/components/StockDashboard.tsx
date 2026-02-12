@@ -6,11 +6,31 @@ import { StockCard } from "@/components/StockCard";
 import { DataTable } from "@/components/DataTable";
 import { columns } from "@/components/StockTableColumns";
 import { DividendFilter } from "@/components/DividendFilter";
+import { InfiniteStockCards } from "@/components/InfiniteStockCards";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutGrid, Table as TableIcon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
-export function StockDashboard({ stocks }: { stocks: Stock[] }) {
+interface StockDashboardProps {
+  stocks: Stock[];
+  total: number;
+  minYield: number;
+  currentPage: number;
+  pageSize: number;
+}
+
+export function StockDashboard({
+  stocks,
+  total,
+  minYield,
+  currentPage,
+  pageSize = 20,
+}: StockDashboardProps) {
   const [view, setView] = useState("card");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   // マウント時に localStorage から表示設定を読み込む
   useEffect(() => {
@@ -25,6 +45,18 @@ export function StockDashboard({ stocks }: { stocks: Stock[] }) {
     setView(newView);
     localStorage.setItem("stockViewMode", newView);
   };
+
+  // テーブルのページ変更ハンドラ
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+
+    startTransition(() => {
+      router.push(`/?${params.toString()}`);
+    });
+  };
+
+  const totalPages = Math.ceil(total / pageSize);
 
   return (
     <Tabs value={view} onValueChange={handleViewChange} className="space-y-6">
@@ -48,16 +80,22 @@ export function StockDashboard({ stocks }: { stocks: Stock[] }) {
       </div>
       {/* カード表示 */}
       <TabsContent value="card" className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* TODO: 最初の表示数制限、「さらに読み込む」ボタン or スクロールで追加読み込み */}
-          {stocks.map((stock) => (
-            <StockCard key={stock.code} stock={stock} />
-          ))}
-        </div>
+        <InfiniteStockCards
+          initialStocks={stocks}
+          initialTotal={total}
+          minYield={minYield}
+          pageSize={pageSize}
+        />
       </TabsContent>
       {/* テーブル表示 */}
       <TabsContent value="table">
-        <DataTable columns={columns} data={stocks} />
+        <DataTable
+          columns={columns}
+          data={stocks}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </TabsContent>
     </Tabs>
   );
