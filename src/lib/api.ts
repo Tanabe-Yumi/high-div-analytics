@@ -42,13 +42,16 @@ export interface GetStocksResult {
 export async function getStocks(
   minDividendYield: number = 0,
   page: number = 0,
-  pageSize: number = 20
+  pageSize: number = 20,
 ): Promise<GetStocksResult> {
   // stocks join scores
-  let query = supabase.from("stocks").select(`
+  let query = supabase.from("stocks").select(
+    `
       *,
       scores ( * )
-    `, { count: 'exact' });
+    `,
+    { count: "exact" },
+  );
 
   if (minDividendYield > 0) {
     query = query.gte("dividend_yield", minDividendYield);
@@ -57,10 +60,15 @@ export async function getStocks(
   // ページネーション
   const from = page * pageSize;
   const to = from + pageSize - 1;
-  
+
   // ソート: scores.total の降順
+  // TODO: ソートがうまく効いていない
   query = query
-    .order("total", { foreignTable: "scores", ascending: false, nullsFirst: false })
+    .order("total", {
+      foreignTable: "scores",
+      ascending: false,
+      nullsFirst: false,
+    })
     .range(from, to);
 
   const { data: stocksData, error: stocksError, count } = await query;
