@@ -1,6 +1,6 @@
 import { getStocks } from "@/lib/api";
 import { StockDashboard } from "@/components/StockDashboard";
-import { AlertCircleIcon } from "lucide-react";
+import { DataNotFoundArea } from "@/components/layout/DataNotFoundArea";
 
 interface SearchParams {
   min_yield?: string;
@@ -36,19 +36,7 @@ const Home = async ({
       </section>
 
       {stocks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 border-2 border-dashed rounded-xl border-muted bg-muted/5">
-          <div className="p-4 rounded-full bg-muted/20">
-            <AlertCircleIcon className="w-10 h-10 text-muted-foreground" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-xl font-semibold">
-              データが見つかりませんでした
-            </h3>
-            <p className="text-muted-foreground max-w-sm mx-auto">
-              現在表示できる高配当株データがありません。しばらく経ってから再度アクセスしてください。
-            </p>
-          </div>
-        </div>
+        <DataNotFoundArea />
       ) : (
         <StockDashboard
           stocks={stocks}
