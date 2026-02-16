@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, SearchIcon } from "lucide-react";
+import { ChevronDown, SearchIcon, XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -97,6 +97,16 @@ export function DataTable<TData, TValue>({
           />
           <InputGroupAddon>
             <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            <button
+              onClick={() => setGlobalFilter("")}
+              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              aria-label="検索をクリア"
+              title="検索をクリア"
+            >
+              <XIcon className="h-4 w-4" />
+            </button>
           </InputGroupAddon>
         </InputGroup>
 
