@@ -107,6 +107,7 @@ export async function getStocks(
       market: s.market ?? undefined,
       price: s.price ?? 0,
       dividendYield: s.dividend_yield ?? 0,
+      // TODO: metrics不要？
       metrics,
       score,
       updatedAt: s.updated_at,
