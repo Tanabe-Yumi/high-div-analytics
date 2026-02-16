@@ -3,7 +3,7 @@ interface CircleScoreGageProps {
   maxScore: number;
 }
 
-const CircleScoreGage = ({ score, maxScore }: CircleScoreGageProps) => {
+export const CircleScoreGage = ({ score, maxScore }: CircleScoreGageProps) => {
   const r = 70;
   const stroke = 2 * Math.PI * r;
   const strokeOffset = stroke * ((40 - score) / 40);
@@ -45,5 +45,3 @@ const CircleScoreGage = ({ score, maxScore }: CircleScoreGageProps) => {
     </div>
   );
 };
-
-export default CircleScoreGage;

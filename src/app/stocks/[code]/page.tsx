@@ -1,14 +1,10 @@
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { Separator } from "@/components/ui/separator";
 import { getStockByCode, getFinancialHistory } from "@/lib/api";
 import { HistoricalChart } from "@/components/HistoricalChart";
-import CircleScoreGage from "@/components/CircleScoreGage";
+import { CircleScoreGage } from "@/components/CircleScoreGage";
+import { HoverInfoCard } from "@/components/HoverInfoCard";
 import {
   ArrowLeft,
   BanknoteIcon,
@@ -20,7 +16,6 @@ import {
   ChartPieIcon,
   CoinsIcon,
   HandCoinsIcon,
-  InfoIcon,
   LandmarkIcon,
   ShieldCheckIcon,
   TrendingUpIcon,
@@ -173,30 +168,19 @@ const StockDetailPage = async ({
                       )}
                     </span>
                     {item.label}
-                    {/* TODO: ホバーカードを別コンポーネント化 */}
-                    <HoverCard openDelay={100} closeDelay={100}>
-                      <HoverCardTrigger asChild>
-                        <InfoIcon className="size-3 stroke-muted-foreground" />
-                      </HoverCardTrigger>
-                      <HoverCardContent side="top" className="text-sm">
-                        <div className="flex flex-col gap-1">
-                          <h4 className="font-medium">
-                            {
-                              evaluationIndex.find(
-                                (e) => e.label === item.label,
-                              )?.longLabel
-                            }
-                          </h4>
-                          <p>
-                            {
-                              evaluationIndex.find(
-                                (e) => e.label === item.label,
-                              )?.descliption
-                            }
-                          </p>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
+                    {/* 項目の詳細（ホバー表示） */}
+                    {evaluationIndex.find((e) => e.label === item.label) && (
+                      <HoverInfoCard
+                        title={
+                          evaluationIndex.find((e) => e.label === item.label)
+                            ?.longLabel ?? ""
+                        }
+                        description={
+                          evaluationIndex.find((e) => e.label === item.label)
+                            ?.description ?? ""
+                        }
+                      />
+                    )}
                   </span>
                   <span className="font-bold text-neutral-800">
                     {item.score} / 5
