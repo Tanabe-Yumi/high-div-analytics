@@ -22,7 +22,7 @@ export function DividendFilter() {
   const handleValueChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("min_yield", value);
-    
+
     startTransition(() => {
       router.push(`/?${params.toString()}`);
     });
@@ -36,7 +36,7 @@ export function DividendFilter() {
         onValueChange={handleValueChange}
         disabled={isPending}
       >
-        <SelectTrigger className="w-[140px]">
+        <SelectTrigger className="w-35">
           <SelectValue placeholder="配当利回り" />
         </SelectTrigger>
         <SelectContent>
