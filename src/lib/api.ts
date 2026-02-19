@@ -1,23 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import { Tables } from "@/types/database.types";
-import { Stock, EvaluationMetrics, Score } from "@/types/stock";
+import { Stock, Score } from "@/types/stock";
 
 // TODO: エラーハンドリング
-
-function mapToMetrics(
-  history?: Tables<"financial_history">,
-): EvaluationMetrics {
-  return {
-    sales: history?.sales ?? 0,
-    operatingProfitMargin: history?.operating_profit_margin ?? 0,
-    eps: history?.earnings_per_share ?? 0,
-    equityRatio: history?.equity_ratio ?? 0,
-    operatingCF: history?.operating_cash_flow ?? 0,
-    cash: history?.cash ?? 0,
-    dividendPerShare: history?.dividend_per_share ?? 0,
-    payoutRatio: history?.payout_ratio ?? 0,
-  };
-}
 
 function mapToScore(scores?: Tables<"scores">): Score {
   return {
@@ -91,13 +76,7 @@ export async function getStocks(
 
   // Stock 型にマッピング
   const stocks: Stock[] = stocksData.map((s) => {
-    // 最新の決算レコードを取得
-    const history: Tables<"financial_history"> | undefined = historyData.find(
-      (h) => h.code === s.code,
-    );
-
     // 各評価項目の最新値
-    const metrics = mapToMetrics(history);
     const score = mapToScore(s.scores ?? undefined);
 
     return {
@@ -107,8 +86,6 @@ export async function getStocks(
       market: s.market ?? undefined,
       price: s.price ?? 0,
       dividendYield: s.dividend_yield ?? 0,
-      // TODO: metrics不要？
-      metrics,
       score,
       updatedAt: s.updated_at,
     };
@@ -133,19 +110,6 @@ export async function getStockByCode(code: string): Promise<Stock | null> {
     return null;
   }
 
-  // 最新の決算レコードを取得
-  const { data: historyData, error: historyError } = await supabase
-    .from("financial_history")
-    .select("*")
-    .eq("code", code)
-    .order("year", { ascending: false });
-
-  if (historyError || !historyData) {
-    console.error("Error fetching history:", historyError);
-    return null;
-  }
-
-  const metrics = mapToMetrics(historyData[0]);
   const score = mapToScore(data[0].scores ?? undefined);
 
   return {
@@ -155,7 +119,6 @@ export async function getStockByCode(code: string): Promise<Stock | null> {
     market: data[0].market ?? undefined,
     price: data[0].price ?? 0,
     dividendYield: data[0].dividend_yield ?? 0,
-    metrics,
     score,
     updatedAt: data[0].updated_at,
   };

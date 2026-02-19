@@ -21,7 +21,6 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { evaluationIndex } from "@/constants/evaluations";
 
 const StockDetailPage = async ({
   params,
@@ -37,57 +36,66 @@ const StockDetailPage = async ({
     notFound();
   }
 
-  const { metrics, score } = stock;
-  // TODO: スコアの型定義と、undefinedの可能性排除
-
-  const metricItems = [
+  const evaluationItems = [
     {
       label: "売上",
-      value: `${metrics.sales.toLocaleString()}百万円`,
-      score: score?.sales,
+      score: stock.score?.sales,
       icon: TrendingUpIcon,
+      longLabel: "売上 (Sales)",
+      description: "会社の総売り上げ。右肩上がりが理想。",
     },
     {
       label: "営業利益率",
-      value: `${metrics.operatingProfitMargin.toLocaleString()}%`,
-      score: score?.operatingProfitMargin,
+      score: stock.score?.operatingProfitMargin,
       icon: ChartLineIcon,
+      longLabel: "営業利益率 (Operating Profit Margin)",
+      description: "効率的に稼げているかどうか。常に10%以上が理想。",
     },
     {
       label: "EPS",
-      value: `${metrics.eps}円`,
-      score: score?.eps,
+      score: stock.score?.eps,
       icon: ChartColumnBigIcon,
+      longLabel: "EPS (Earnings Per Share)",
+      description: "一株あたりの純利益。実質配当の上限。右肩上がりが理想。",
     },
     {
       label: "営業CF",
-      value: `${metrics.operatingCF.toLocaleString()}百万円`,
-      score: score?.operatingCF,
+      score: stock.score?.operatingCF,
       icon: CoinsIcon,
+      longLabel: "営業CF (Operating Cash Flow)",
+      description:
+        "本業でどれだけ稼げているか。毎年黒字、できれば右肩上がりが理想。",
     },
     {
       label: "一株配当",
-      value: `${metrics.dividendPerShare.toLocaleString()}円`,
-      score: score?.dividendPerShare,
+      score: stock.score?.dividendPerShare,
       icon: HandCoinsIcon,
+      longLabel: "一株配当 (Dividend per Share)",
+      description: "1株あたりの配当金。減配がないことが理想。",
     },
     {
       label: "配当性向",
-      value: `${metrics.payoutRatio}%`,
-      score: score?.payoutRatio,
+      score: stock.score?.payoutRatio,
       icon: ChartPieIcon,
+      longLabel: "配当性向 (Dividend Ratio)",
+      description:
+        "純利益のうちどれだけを配当に回しているか。高すぎても危険。30~50%が理想。",
     },
     {
       label: "自己資本比率",
-      value: `${metrics.equityRatio}%`,
-      score: score?.equityRatio,
+      score: stock.score?.equityRatio,
       icon: ShieldCheckIcon,
+      longLabel: "自己資本比率 (Equity Ratio)",
+      description:
+        "総資産のうち、返済の必要がないお金の比率。より高い比率が理想。40%以上など。",
     },
     {
       label: "現金等",
-      value: `${metrics.cash.toLocaleString()}百万円`,
-      score: score?.cash,
+      score: stock.score?.cash,
       icon: BanknoteIcon,
+      longLabel: "現金等 (Cash and Cash Equivalents)",
+      description:
+        "企業体力。多いほど、不況に強い。長期的に増加していることが理想。",
     },
   ];
 
@@ -146,7 +154,7 @@ const StockDetailPage = async ({
           <h3 className="text-lg font-bold mb-4 text-white uppercase tracking-widest">
             総合スコア
           </h3>
-          <CircleScoreGage score={score?.total ?? 0} maxScore={40} />
+          <CircleScoreGage score={stock.score?.total ?? 0} maxScore={40} />
         </div>
 
         {/* 右側: 項目ごとのスコア */}
@@ -156,7 +164,7 @@ const StockDetailPage = async ({
             評価項目
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-            {metricItems.map((item, index) => (
+            {evaluationItems.map((item, index) => (
               <div key={index} className="space-y-1.5">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground font-medium flex items-center gap-2">
@@ -169,18 +177,10 @@ const StockDetailPage = async ({
                     </span>
                     {item.label}
                     {/* 項目の詳細（ホバー表示） */}
-                    {evaluationIndex.find((e) => e.label === item.label) && (
-                      <HoverInfoCard
-                        title={
-                          evaluationIndex.find((e) => e.label === item.label)
-                            ?.longLabel ?? ""
-                        }
-                        description={
-                          evaluationIndex.find((e) => e.label === item.label)
-                            ?.description ?? ""
-                        }
-                      />
-                    )}
+                    <HoverInfoCard
+                      title={item.longLabel}
+                      description={item.description}
+                    />
                   </span>
                   <span className="font-bold text-neutral-800">
                     {item.score} / 5
