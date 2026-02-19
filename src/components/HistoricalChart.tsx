@@ -27,7 +27,6 @@ export const HistoricalChart = ({ history }: HistoricalChartProps) => {
 
   return (
     <div className="w-full h-100">
-      <h3 className="text-lg font-bold mb-4">過去10年の業績推移</h3>
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}

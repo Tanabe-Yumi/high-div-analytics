@@ -143,15 +143,4 @@ export const columns: ColumnDef<Stock>[] = [
     },
     accessorFn: (row) => row.score?.total,
   },
-  {
-    id: "actions",
-    enableGlobalFilter: false,
-    cell: ({ row }) => {
-      return (
-        <Button asChild size="sm" variant="outline">
-          <Link href={`/stocks/${row.original.code}`}>詳細</Link>
-        </Button>
-      );
-    },
-  },
 ];
