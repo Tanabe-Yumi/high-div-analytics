@@ -1,12 +1,18 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { StockWithTotalScore } from "@/types/stock";
 import { Badge } from "@/components/ui/badge";
+import {
+  DataTableColumnHeaderFilterableMulti,
+  DataTableColumnHeaderFilterableUni,
+} from "@/components/DataTableColumnHeader";
+import { dividendYieldRange } from "@/constants/stock";
+import { markets } from "@/constants/markets";
+import { industries } from "@/constants/industry";
+import { scoreRanges } from "@/constants/score";
 
 // TODO: カラム幅を固定したい
 
@@ -15,19 +21,9 @@ import { Badge } from "@/components/ui/badge";
 export const columns: ColumnDef<StockWithTotalScore>[] = [
   {
     accessorKey: "code",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          コード
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: () => <div className="text-center">コード</div>,
     cell: ({ row }) => (
-      <div className="font-medium px-4">{row.getValue("code")}</div>
+      <div className="text-right font-medium px-4">{row.getValue("code")}</div>
     ),
   },
   {
@@ -43,26 +39,18 @@ export const columns: ColumnDef<StockWithTotalScore>[] = [
     ),
   },
   {
-    accessorKey: "industry",
-    header: "業種",
-    cell: ({ row }) => {
-      const industry = row.getValue("industry") as string;
-      return (
-        <Badge
-          variant="secondary"
-          className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900 border-sky-200 dark:border-sky-800"
-        >
-          {industry}
-        </Badge>
-      );
-    },
-  },
-  {
-    // RODO: market と industry の順番を逆にする
     accessorKey: "market",
-    header: "市場",
+    header: ({ column }) => (
+      <DataTableColumnHeaderFilterableMulti
+        column={column}
+        title="市場"
+        queryParam="market"
+        choices={markets}
+      />
+    ),
     cell: ({ row }) => {
       const market = row.getValue("market") as string;
+      if (!market) return <div className="px-4">-</div>;
       return (
         <Badge
           variant="secondary"
@@ -74,22 +62,35 @@ export const columns: ColumnDef<StockWithTotalScore>[] = [
     },
   },
   {
-    accessorKey: "price",
-    enableGlobalFilter: false,
-    header: ({ column }) => {
+    accessorKey: "industry",
+    header: ({ column }) => (
+      <DataTableColumnHeaderFilterableMulti
+        column={column}
+        title="業種"
+        queryParam="industry"
+        choices={industries}
+      />
+    ),
+    cell: ({ row }) => {
+      const industry = row.getValue("industry") as string;
+      if (!industry) return <div className="px-4">-</div>;
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        <Badge
+          variant="secondary"
+          className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900 border-sky-200 dark:border-sky-800"
         >
-          現在値
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {industry}
+        </Badge>
       );
     },
+  },
+  {
+    accessorKey: "price",
+    enableGlobalFilter: false,
+    header: "現在値",
     cell: ({ row }) => {
       const price = row.getValue("price") as number | undefined;
-      if (price === undefined) return <div className="text-right px-4">-</div>;
+      if (!price) return <div className="text-right px-4">-</div>;
 
       const formatted = new Intl.NumberFormat("ja-JP", {
         style: "currency",
@@ -102,21 +103,17 @@ export const columns: ColumnDef<StockWithTotalScore>[] = [
   {
     accessorKey: "dividendYield",
     enableGlobalFilter: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          配当利回り
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeaderFilterableUni
+        column={column}
+        title="配当利回り"
+        queryParam="yield"
+        choices={dividendYieldRange}
+      />
+    ),
     cell: ({ row }) => {
       const yieldVal = row.getValue("dividendYield") as number | undefined;
-      if (yieldVal === undefined)
-        return <div className="text-right px-4">-</div>;
+      if (!yieldVal) return <div className="text-right px-4">-</div>;
       return (
         <div className="text-right font-bold text-emerald-600 px-4">
           {yieldVal}%
@@ -128,20 +125,17 @@ export const columns: ColumnDef<StockWithTotalScore>[] = [
     accessorKey: "score.total",
     id: "totalScore",
     enableGlobalFilter: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          合計点
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeaderFilterableUni
+        column={column}
+        title="スコア"
+        queryParam="score"
+        choices={scoreRanges}
+      />
+    ),
     cell: ({ row }) => {
-      const score = row.original.totalScore;
-      if (score === undefined) return <div className="text-center px-4">-</div>;
+      const score = row.getValue("totalScore") as string;
+      if (!score) return <div className="text-center px-4">-</div>;
       return <div className="text-center font-black text-lg px-4">{score}</div>;
     },
     accessorFn: (row) => row.totalScore,

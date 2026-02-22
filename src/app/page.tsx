@@ -1,34 +1,33 @@
-import { getStocksWithTotalScore } from "@/lib/api";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { StockDashboard } from "@/components/StockDashboard";
-import { DataNotFoundArea } from "@/components/layout/DataNotFoundArea";
+import { StockWithTotalScore } from "@/types/stock";
 
-interface SearchParams {
-  min_yield?: string;
-  page?: string;
-}
-
-const Home = async ({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) => {
-  const params = await searchParams;
-  const minYieldParam = params.min_yield;
-  const minYield =
-    minYieldParam === undefined ? 3.5 : parseFloat(minYieldParam);
-
-  // ページネーションパラメータ
+const Home = () => {
+  const endpoint = "/api/stocks";
   const pageSize = 20;
-  const currentPage = parseInt(params.page || "0");
+  const currentPage = 0;
 
-  const { stocks, totalCount } = await getStocksWithTotalScore(
-    minYield,
-    currentPage,
-    pageSize,
-  ).catch((e) => {
-    console.error(e);
-    return { stocks: [], totalCount: 0 };
-  });
+  const [stocks, setStocks] = useState<StockWithTotalScore[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const searchParams = useSearchParams();
+
+  // クエリパラメーターが変更されるたびにデータ更新
+  useEffect(() => {
+    const allQueryParameters = searchParams.toString();
+    console.log(allQueryParameters);
+    fetch(`${endpoint}?${allQueryParameters}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setStocks(data.stocks);
+        setTotalCount(data.totalCount);
+      });
+  }, [searchParams]);
 
   return (
     <div className="space-y-8">
@@ -41,17 +40,12 @@ const Home = async ({
         </p>
       </section>
 
-      {stocks.length === 0 ? (
-        // TODO: 表の中に「データがありません」表示をする
-        <DataNotFoundArea />
-      ) : (
-        <StockDashboard
-          stocks={stocks}
-          total={totalCount}
-          currentPage={currentPage}
-          pageSize={pageSize}
-        />
-      )}
+      <StockDashboard
+        stocks={stocks}
+        total={totalCount}
+        currentPage={currentPage}
+        pageSize={pageSize}
+      />
     </div>
   );
 };

@@ -6,6 +6,8 @@ import {
   Score,
   FinancialStatement,
 } from "@/types/stock";
+import { markets as constMarkets } from "@/constants/markets";
+import { industries as constIndustries } from "@/constants/industry";
 
 // TODO: エラーハンドリング
 
@@ -31,7 +33,11 @@ function mapToScore(scores: Tables<"scores">): Score {
 
 // select from stocks
 export async function getStocksWithTotalScore(
+  // search: string = "",
+  markets: string[] = [],
+  industries: string[] = [],
   minDividendYield: number = 0,
+  minScore: number = 0,
   page: number = 0,
   pageSize: number = 20,
 ): Promise<StockPage> {
@@ -40,10 +46,28 @@ export async function getStocksWithTotalScore(
   const to = from + pageSize - 1;
 
   // select from view(stocks left join scores on code)
-  const query = supabase
+  let query = supabase
     .from("stocks_with_total_score")
     .select("*", { count: "exact" })
     .gte("dividend_yield", minDividendYield)
+    .gte("total_score", minScore);
+
+  // filtering
+  if (markets.length !== 0) {
+    const filtering = constMarkets
+      .filter((m) => markets.includes(m.value))
+      .map((m) => m.label);
+    query = query.in("market", filtering);
+  }
+  if (industries.length !== 0) {
+    const filtering = constIndustries
+      .filter((i) => industries.includes(i.value))
+      .map((i) => i.label);
+    query = query.in("industry", filtering);
+  }
+
+  // finalize
+  query = query
     .order("total_score", { ascending: false, nullsFirst: false })
     .range(from, to);
 

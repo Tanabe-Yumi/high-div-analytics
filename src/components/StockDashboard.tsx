@@ -3,7 +3,6 @@
 import { StockWithTotalScore } from "@/types/stock";
 import { DataTable } from "@/components/DataTable";
 import { columns } from "@/components/StockTableColumns";
-import { DividendFilter } from "@/components/DividendFilter";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
@@ -40,7 +39,6 @@ export function StockDashboard({
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl font-bold tracking-tight">銘柄一覧</h2>
-        <DividendFilter />
       </div>
       <DataTable
         columns={columns}
