@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getStockWithScoresById, getFinancialHistoryByCode } from "@/lib/api";
+import { formatDate } from "@/lib/formatDate";
 import { HistoricalChart } from "@/components/HistoricalChart";
 import { CircleScoreGage } from "@/components/CircleScoreGage";
 import { HoverInfoCard } from "@/components/HoverInfoCard";
@@ -28,18 +29,18 @@ const StockDetailPage = async ({
   params: Promise<{ code: string }>;
 }) => {
   const { code } = await params;
-  // TODO: getStockByCode() の戻り値を精査
   const stock = await getStockWithScoresById(code).catch((e) =>
     console.error(e),
   );
   const history = await getFinancialHistoryByCode(code).catch((e) =>
     console.error(e),
   );
-  // console.log(history);
 
   if (!stock) {
     notFound();
   }
+
+  const updatedDate = formatDate(new Date(stock.updatedAt));
 
   const evaluationItems = [
     {
@@ -224,7 +225,10 @@ const StockDetailPage = async ({
         )}
       </div>
 
-      {/* TODO: 最終更新日を追加(stocksテーブル) */}
+      {/* 最終更新日 */}
+      <div className="flex flex-col gap-y-2 text-right text-sm text-muted-foreground">
+        最終更新：{updatedDate}
+      </div>
 
       {/* TODO: フッター */}
     </div>

@@ -53,6 +53,7 @@ export async function getStocksWithTotalScore(
   // 検索
   if (search) {
     // TODO: ユースケースに沿って検索方法を決める
+    // TODO: 検索用カラムから fts カラムを作成し、検索対象とする
 
     // web検索構文
     // query = query.textSearch("fts", search, { type: "websearch" });
