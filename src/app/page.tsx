@@ -47,8 +47,6 @@ const Home = () => {
 
       {/* TODO: いますぐスコア再計算ボタン */}
 
-      {/* TODO: CSVダウンロード機能を追加 */}
-
       <StockDashboard
         stocks={stocks}
         total={totalCount}
