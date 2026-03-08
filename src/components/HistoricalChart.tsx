@@ -122,6 +122,12 @@ const BaseHistoricalChart = ({
 export const HistoricalChartGyoseki = ({ history }: HistoricalChartProps) => (
   <BaseHistoricalChart history={history} leftUnit="百万円">
     <Bar dataKey="sales" yAxisId="yen" fill="var(--color-sales)" radius={4} />
+    <Bar
+      dataKey="operatingCF"
+      yAxisId="yen"
+      fill="var(--color-operatingCF)"
+      radius={4}
+    />
     <Line
       dataKey="operatingProfitMargin"
       yAxisId="percent"
@@ -135,12 +141,6 @@ export const HistoricalChartGyoseki = ({ history }: HistoricalChartProps) => (
       type="linear"
       stroke="var(--color-eps)"
       strokeWidth={3}
-    />
-    <Bar
-      dataKey="operatingCF"
-      yAxisId="yen"
-      fill="var(--color-operatingCF)"
-      radius={4}
     />
   </BaseHistoricalChart>
 );
@@ -167,6 +167,7 @@ export const HistoricalChartHaito = ({ history }: HistoricalChartProps) => (
 // 財務チャート
 export const HistoricalChartZaimu = ({ history }: HistoricalChartProps) => (
   <BaseHistoricalChart history={history} leftUnit="百万円">
+    <Bar dataKey="cash" yAxisId="yen" fill="var(--color-cash)" radius={4} />
     <Line
       dataKey="equityRatio"
       yAxisId="percent"
@@ -174,6 +175,5 @@ export const HistoricalChartZaimu = ({ history }: HistoricalChartProps) => (
       stroke="var(--color-equityRatio)"
       strokeWidth={3}
     />
-    <Bar dataKey="cash" yAxisId="yen" fill="var(--color-cash)" radius={4} />
   </BaseHistoricalChart>
 );
