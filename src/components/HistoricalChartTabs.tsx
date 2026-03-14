@@ -26,8 +26,8 @@ export const HistoricalChartTabs = ({ history }: HistoricalChartTabsProps) => {
 
   return (
     <Tabs defaultValue="gyoseki">
-      <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-        <h3 className="text-lg font-bold text-neutral-800 flex items-center gap-2">
+      <div className="flex justify-between items-center border-b pb-4">
+        <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
           <ChartNoAxesCombinedIcon className="text-emerald-600 w-5 h-5" />
           業績グラフ
         </h3>
@@ -36,7 +36,7 @@ export const HistoricalChartTabs = ({ history }: HistoricalChartTabsProps) => {
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="p-2 data-[state=active]:font-bold data-[state=active]:text-emerald-600"
+              className="p-2 data-[state=active]:font-bold data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-500"
             >
               <tab.icon />
               {tab.label}

@@ -129,7 +129,7 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
       </Link>
 
       {/* 基本情報 */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 p-6 md:p-8 bg-white rounded-2xl shadow-sm border border-emerald-100 overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 p-6 md:p-8 bg-card rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-900/50 overflow-hidden">
         <div className="flex flex-col gap-y-2">
           <div className="flex flex-wrap items-center gap-1">
             <Badge className="font-bold">{stock.code}</Badge>
@@ -152,7 +152,7 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
         <div className="flex items-center gap-6">
           <div className="text-left">
             <p className="text-sm text-muted-foreground font-medium">現在値</p>
-            <p className="text-2xl font-bold text-right text-gray-900">
+            <p className="text-2xl font-bold text-right text-foreground">
               ¥{stock.price ?? " -"}
             </p>
           </div>
@@ -161,7 +161,7 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
             <p className="text-sm text-muted-foreground font-medium">
               配当利回り
             </p>
-            <p className="text-2xl font-bold text-right text-emerald-700">
+            <p className="text-2xl font-bold text-right text-emerald-700 dark:text-emerald-500">
               {stock.dividendYield ?? "- "}%
             </p>
           </div>
@@ -170,19 +170,19 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* 左側: 総合スコア */}
-        <div className="md:col-span-1 bg-linear-to-br from-emerald-600 to-teal-500 rounded-2xl shadow-lg p-8 text-white flex flex-col items-center justify-center relative overflow-hidden group">
+        <div className="md:col-span-1 bg-linear-to-br from-emerald-600 to-teal-500 dark:from-card dark:to-card dark:border dark:border-emerald-900/50 rounded-2xl shadow-lg p-8 text-white dark:text-white flex flex-col items-center justify-center relative overflow-hidden group">
           {/* 背景装飾のサークル */}
-          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white opacity-20 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/20 dark:bg-gray-500/20 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
 
-          <h3 className="text-lg font-bold mb-4 text-white uppercase tracking-widest">
+          <h3 className="text-lg font-bold mb-4 uppercase tracking-widest">
             総合スコア
           </h3>
           <CircleScoreGage score={stock.totalScore} maxScore={40} />
         </div>
 
         {/* 右側: 項目ごとのスコア */}
-        <div className="md:col-span-2 bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 md:p-8">
-          <h3 className="text-lg font-bold text-neutral-800 mb-6 flex items-center gap-2 border-b border-gray-100 pb-4">
+        <div className="md:col-span-2 bg-card rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-900/50 p-6 md:p-8">
+          <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2 border-b pb-4">
             <BarChart3Icon className="text-emerald-600 w-5 h-5" />
             評価項目
           </h3>
@@ -191,7 +191,7 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
               <div key={index} className="space-y-1.5">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground font-medium flex items-center gap-2">
-                    <span className="p-1 bg-emerald-50 text-emerald-600 rounded">
+                    <span className="p-1 bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 rounded">
                       {item.icon ? (
                         <item.icon className="size-4" />
                       ) : (
@@ -205,11 +205,11 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
                       description={item.description}
                     />
                   </span>
-                  <span className="font-bold text-neutral-800">
+                  <span className="font-bold text-foreground">
                     {item.score ?? "-"} / 5
                   </span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-emerald-500 rounded-full transition-all duration-1000"
                     style={{
@@ -224,7 +224,7 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
       </div>
 
       {/* 業績グラフ */}
-      <div className="p-6 md:p-8 bg-white rounded-2xl shadow-sm border border-emerald-100 overflow-hidden">
+      <div className="p-6 md:p-8 bg-card rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-900/50 overflow-hidden">
         <HistoricalChartTabs history={history ?? []} />
       </div>
 

@@ -28,7 +28,7 @@ export const CircleScoreGage = ({ score, maxScore }: CircleScoreGageProps) => {
           cy="80"
         />
         <circle
-          className="text-white"
+          className="text-white dark:text-emerald-500"
           strokeWidth="10"
           strokeDasharray={stroke}
           strokeDashoffset={strokeOffset}
@@ -47,7 +47,7 @@ export const CircleScoreGage = ({ score, maxScore }: CircleScoreGageProps) => {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-5xl font-black">{score}</span>
-        <span className="text-sm font-medium text-white">/ {maxScore}点</span>
+        <span className="text-sm font-medium">/ {maxScore}点</span>
       </div>
     </div>
   );

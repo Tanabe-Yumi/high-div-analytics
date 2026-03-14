@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Loader } from "@/components/layout/Loader";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +35,7 @@ export default function RootLayout({
   footer: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex flex-col",
@@ -42,15 +43,22 @@ export default function RootLayout({
           geistMono.variable,
         )}
       >
-        <NuqsAdapter>
-          {header}
-          <Suspense fallback={<Loader label="読み込み中..." />}>
-            <main className="container mx-auto py-6 px-4 md:px-8 flex-1">
-              {children}
-            </main>
-          </Suspense>
-          {footer}
-        </NuqsAdapter>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NuqsAdapter>
+            {header}
+            <Suspense fallback={<Loader label="読み込み中..." />}>
+              <main className="container mx-auto py-6 px-4 md:px-8 flex-1">
+                {children}
+              </main>
+            </Suspense>
+            {footer}
+          </NuqsAdapter>
+        </ThemeProvider>
       </body>
     </html>
   );
