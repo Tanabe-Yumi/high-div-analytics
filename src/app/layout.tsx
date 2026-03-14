@@ -18,8 +18,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "High Dividend Stock Analysis",
-  description: "Japanese High Dividend Stock Grading App",
+  title: {
+    template: "%s | いんかむ日和",
+    default: "いんかむ日和",
+  },
+  description: "日本高配当株の分析アプリ",
 };
 
 export default function RootLayout({

@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { getStockWithScoresById, getFinancialHistoryByCode } from "@/lib/api";
+import {
+  getStockWithScoresByCode,
+  getFinancialHistoryByCode,
+  getStockNameByCode,
+} from "@/lib/api";
 import { formatDate } from "@/lib/formatDate";
 import { HistoricalChartTabs } from "@/components/HistoricalChartTabs";
 import { CircleScoreGage } from "@/components/CircleScoreGage";
@@ -22,15 +26,22 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-// TODO: ブラウザのタブのタイトルを変える
-
-const StockDetailPage = async ({
-  params,
-}: {
+interface StockDetailPageProps {
   params: Promise<{ code: string }>;
-}) => {
+}
+
+// ブラウザのタブ名を変更
+export async function generateMetadata({ params }: StockDetailPageProps) {
   const { code } = await params;
-  const stock = await getStockWithScoresById(code).catch((e) =>
+  const stock = await getStockNameByCode(code);
+  return {
+    title: `${code} ${stock.name}`,
+  };
+}
+
+const StockDetailPage = async ({ params }: StockDetailPageProps) => {
+  const { code } = await params;
+  const stock = await getStockWithScoresByCode(code).catch((e) =>
     console.error(e),
   );
   const history = await getFinancialHistoryByCode(code).catch((e) =>
