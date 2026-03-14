@@ -146,8 +146,6 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
             <h2 className="text-3xl font-bold">{stock.name}</h2>
             {/* TODO: 企業公式サイトへのリンク */}
           </div>
-          {/* TODO: インカム日和バッチをつける(天気で表す？) */}
-
           {/* TODO: お気に入り登録ボタン */}
         </div>
 

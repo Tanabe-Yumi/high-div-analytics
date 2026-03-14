@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BarChart3, SunIcon } from "lucide-react";
 
-export const Header = () => {
+const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-accent-foreground bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0 px-4 md:px-8">
@@ -30,3 +30,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;
