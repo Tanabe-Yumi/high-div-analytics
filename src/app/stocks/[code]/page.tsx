@@ -232,8 +232,6 @@ const StockDetailPage = async ({ params }: StockDetailPageProps) => {
       <div className="flex flex-col gap-y-2 text-right text-sm text-muted-foreground">
         最終更新：{updatedDate}
       </div>
-
-      {/* TODO: フッター */}
     </div>
   );
 };
