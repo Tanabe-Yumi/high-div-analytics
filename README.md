@@ -6,18 +6,33 @@
 ## 概要
 
 高配当株の分析手法とモダンなWeb技術を組み合わせて開発された、日本の高配当株に特化したWebアプリケーションです。  
-単なる情報表示にとどまらず、**「高速なフィルタリング・検索体験」「データの視覚化」「自動化されたデータ収集パイプライン」**を一気通貫で構築し、複雑な株式データを分かりやすく整理しています。
+単なる情報表示にとどまらず、**「高速なフィルタリング・検索体験」「データの視覚化」「自動化されたデータ収集パイプライン」** を一気通貫で構築し、複雑な株式データを分かりやすく整理しています。
 
 ## 主な機能
 
 - **条件に合った銘柄をサクサク検索**:
-  - 気になる条件（配当利回り、業種など）で素早く絞り込みや並び替えが可能。検索条件はURLとして保存・共有できるため、いつでもお気に入りの検索結果を呼び出せます。
+  - 気になる条件（配当利回り、業種など）で素早く絞り込みや並び替えが可能
+  - 検索条件はURLとして保存・共有できるため、いつでもお気に入りの検索結果を呼び出せる
 - **直感的にわかるデータ視覚化**:
-  - 複雑な財務状況や過去の配当推移などを、レーダーチャートやグラフで分かりやすく表示。有望な銘柄を視覚的にパッと発掘できます。
+  - 複雑な財務状況や過去の配当推移などを、レーダーチャートやグラフで分かりやすく表示
+  - 有望な銘柄を視覚的にパッと発掘できる
 - **快適な使い心地とダークモード対応**:
-  - PCでもスマートフォンでも見やすく、洗練されたデザイン。端末のテーマ設定に合わせたダークモードにも完全対応しており、長時間の分析でも目が疲れにくい設計です。
+  - PCでもスマートフォンでも見やすく、洗練されたデザイン
+  - 端末のテーマ設定に合わせたダークモードにも完全対応しており、長時間の分析でも目が疲れにくい設計
 - **最新データに基づく独自スコアリング**:
-  - 定期的なデータ自動更新により、最新の株価や企業情報を取得。独自のアルゴリズムで算出したスコアを活用して、次の投資先選びを強力にサポートします。
+  - 定期的なデータ自動更新により、最新の株価や企業情報を取得
+  - 独自のアルゴリズムで算出したスコアを活用して、次の投資先選びを強力にサポート
+
+## 画面イメージ
+
+銘柄一覧ページ　※スコアは独断と偏見です  
+<img width="2438" height="1504" alt="銘柄一覧ページ" src="https://github.com/user-attachments/assets/97b4c55a-7ce1-4614-b135-f65d2f5afb1b" />
+
+条件でフィルタリング  
+<img width="2438" height="1500" alt="フィルタリングした銘柄一覧ページ" src="https://github.com/user-attachments/assets/12839abf-968b-4086-a6df-40968053331d" />
+
+銘柄詳細ページ　※スコアは独断と偏見です  
+<img width="684" height="834" alt="銘柄詳細ページ" src="https://github.com/user-attachments/assets/7d2e0536-19a8-4ba9-8b24-f153a4eef0e2" />
 
 ## 技術スタック (Tech Stack)
 
@@ -26,27 +41,27 @@
 
 ### フロントエンド (Frontend)
 
-- **フレームワーク (Framework)**: [Next.js](https://nextjs.org/) (App Router, v16)
-- **UIライブラリ (UI Library)**: [React](https://react.dev/) (v19)
-- **言語 (Language)**: TypeScript
-- **スタイリング (Styling)**: Tailwind CSS v4
-- **コンポーネントライブラリ (Component Library)**: shadcn/ui, Radix UI
-- **アイコン (Icons)**: Lucide React
-- **データテーブル (Data Table)**: TanStack Table v8
-- **状態管理 (State Management)**: nuqs (Type-safe search params state)
-- **データ可視化 (Data Visualization)**: Recharts
+- フレームワーク (Framework): **[Next.js](https://nextjs.org/)** (App Router, v16)
+- UIライブラリ (UI Library): **[React](https://react.dev/)** (v19)
+- 言語 (Language): **TypeScript**
+- スタイリング (Styling): **Tailwind CSS** v4
+- コンポーネントライブラリ (Component Library): **shadcn/ui**, **Radix UI**
+- アイコン (Icons): **Lucide React**
+- データテーブル (Data Table): **TanStack Table** v8
+- 状態管理 (State Management): **nuqs** (Type-safe search params state)
+- データ可視化 (Data Visualization): **Recharts**
 
 ### バックエンド・データベース (Backend & Database)
 
-- **BaaS / データベース (Database)**: [Supabase](https://supabase.com/) (PostgreSQL)
+- BaaS / データベース (Database): **[Supabase](https://supabase.com/)** (PostgreSQL)
   - 認証やデータベースの提供、フロントからのセキュアなエンドポイント通信
 
 ### データ収集・分析パイプライン (Data Pipeline)
 
-- **言語 (Language)**: Python 3.10+
-- **データ収集 (Data Collection)**: `yfinance`
-- **データ分析 (Data Analysis)**: `pandas`, `scipy`
-- **データベース接続 (Database Connection)**: `supabase-python`
+- 言語 (Language): **Python** 3.10+
+- データ収集 (Data Collection): `yfinance`
+- データ分析 (Data Analysis): `pandas`, `scipy`
+- データベース接続 (Database Connection): `supabase-python`
 
 ## ローカル環境構築 (Getting Started)
 
